@@ -86,6 +86,25 @@ def solution(numbers):
     answer = sum(numbers)/len(numbers)
     return answer
 
+# 짝수의 합
+# 정수 n이 주어질 때, n이하의 짝수를 모두 더한 값을 return 하도록 solution 함수를 작성해주세요.
+def solution(n):
+    answer = 0
+    i = 1
+    for i in range(i, n+1):
+        if (i) % 2 == 0:
+            answer += i
+    return answer
 
-
+# 양꼬치
+# 머쓱이네 양꼬치 가게는 10인분을 먹으면 음료수 하나를 서비스로 줍니다.
+# 양꼬치는 1인분에 12,000원, 음료수는 2,000원입니다.
+# 정수 n과 k가 매개변수로 주어졌을 때,
+# 양꼬치 n인분과 음료수 k개를 먹었다면
+# 총얼마를 지불해야 하는지 return 하도록 solution 함수를 완성해보세요.
+def solution(n, k):
+    answer = 12000*n + 2000*k
+    if n // 10 > 0:
+        answer -= ((int(n//10))*2000) 
+    return answer
 
