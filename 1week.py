@@ -142,3 +142,64 @@ def solution(dot):
 def solution(dot):
     quad = [(3,2),(4,1)]  # quad..사용
     return quad[dot[0] > 0][dot[1] > 0]
+
+# 분수의 덧셈
+# 첫 번째 분수의 분자와 분모를 뜻하는 numer1, denom1,
+# 두 번째 분수의 분자와 분모를 뜻하는 numer2, denom2가 매개변수로 주어집니다.
+# 두 분수를 더한 값을 기약 분수로 나타냈을 때
+# 분자와 분모를 순서대로 담은 배열을 return 하도록 solution 함수를 완성해보세요.
+def solution(numer1, denom1, numer2, denom2):
+    import fractions   # 분수를 사용하기위함
+    answer = []
+    a = fractions.Fraction(numer1, denom1) # 앞이 분자, 뒤가 분모
+    b = fractions.Fraction(numer2, denom2)
+    c = a+b      # 각각 분자와 분모라는 뜻
+    answer.extend([c.numerator,c.denominator]) # 리스트에 한번에 넣음
+    return answer
+
+# 배열 두배 만들기
+# 정수 배열 numbers가 매개변수로 주어집니다.
+# numbers의 각 원소에 두배한 원소를 가진 배열을 return하도록 solution 함수를 완성해주세요.
+def solution(numbers):
+    answer = []
+    for i in range(0, len(numbers)): # 배열의 길이 만큼 반복
+        answer.append(2*numbers[i]) # 값을 곱해서 넣어준다.
+    return answer
+# 다른사람 풀이
+def solution(numbers):
+    return [num*2 for num in numbers]
+# [표현식 for 항목 in 반복가능객체 if 조건문] 형태를 리스트 컴프리헨션이라 한다.
+
+# 중앙값 구하기
+# 중앙값은 어떤 주어진 값들을 크기의 순서대로 정렬했을 때
+# 가장 중앙에 위치하는 값을 의미합니다.
+# 예를 들어 1, 2, 7, 10, 11의 중앙값은 7입니다.
+# 정수 배열 array가 매개변수로 주어질 때, 중앙값을 return 하도록 solution 함수를 완성해보세요.
+def solution(array):
+    array = sorted(array) # 오름차순 재배열
+    length = len(array)//2 # 길이 나눠준다. 홀수니깐
+    return array[length]
+
+# 문자열 뒤집기
+# 문자열 my_string이 매개변수로 주어집니다.
+# my_string을 거꾸로 뒤집은 문자열을 return하도록 solution 함수를 완성해주세요.
+def solution(my_string):                  # reversed()는 반대방향으로 순회하는 iterator를 리턴합니다.
+    answer = ''.join(reversed(my_string)) # join()으로 리턴된 iterator의 데이터를 하나의 
+    return answer                         # string으로 만들면, 뒤집어진 문자열을 만들 수 있습니다.
+
+# 문자 반복 출력하기
+# 문자열 my_string과 정수 n이 매개변수로 주어질 때,
+# my_string에 들어있는 각 문자를 n만큼 반복한 문자열을 return 하도록 solution 함수를 완성해보세요.
+def solution(my_string, n):
+    answer = []
+    for i in range(len(my_string)):
+        for j in range(n):
+            answer.append(my_string[i])
+    return ''.join(answer)
+
+# 다른사람 풀이
+def solution(my_string, n):
+    return ''.join(i*n for i in my_string)
+# [표현식 for 항목 in 반복가능객체 if 조건문] 형태를 리스트 컴프리헨션이라 한다.
+
+
