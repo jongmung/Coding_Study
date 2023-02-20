@@ -196,10 +196,55 @@ def solution(my_string, n):
         for j in range(n):
             answer.append(my_string[i])
     return ''.join(answer)
-
 # 다른사람 풀이
 def solution(my_string, n):
     return ''.join(i*n for i in my_string)
 # [표현식 for 항목 in 반복가능객체 if 조건문] 형태를 리스트 컴프리헨션이라 한다.
 
+# 머쓱이보다 키 큰 사람
+# 머쓱이는 학교에서 키 순으로 줄을 설 때 몇 번째로 서야 하는지 궁금해졌습니다.
+# 머쓱이네 반 친구들의 키가 담긴 정수 배열 array와 머쓱이의 키 height가 매개변수로 주어질 때,
+# 머쓱이보다 키 큰 사람 수를 return 하도록 solution 함수를 완성해보세요.
+def solution(array, height):
+    answer = 0
+    for i in range(len(array)):
+        if height < array[i]:
+            answer += 1
+    return answer
+
+# 짝수 홀수 개수
+# 정수가 담긴 리스트 num_list가 주어질 때,
+# num_list의 원소 중 짝수와 홀수의 개수를 담은 배열을 return 하도록 solution 함수를 완성해보세요.
+def solution(num_list):
+    answer = []
+    a = 0
+    b = 0
+    for i in range(len(num_list)):
+        if num_list[i]%2 == 0:
+            a+=1
+        else:
+            b+=1
+    answer.extend([a,b])
+    return answer
+# 다른사람 풀이
+def solution(num_list):
+    answer = [0,0]
+    for n in num_list:
+        answer[n%2]+=1 # n값을 나눠서 짝수냐 홀수냐 구별한 뒤 값을 올려준다.
+    return answer
+
+# 배열 뒤집기
+# 정수가 들어 있는 배열 num_list가 매개변수로 주어집니다.
+# num_list의 원소의 순서를 거꾸로 뒤집은 배열을 return하도록 solution 함수를 완성해주세요.
+def solution(num_list):
+    return num_list[::-1]
+     
+# 짝수는 싫어요
+# 정수 n이 매개변수로 주어질 때, n 이하의 홀수가 오름차순으로 담긴 배열을 return하도록 solution 함수를 완성해주세요.
+def solution(n):
+    answer = []
+    for i in range(1,n+1):
+        if i%2 == 1:
+            answer.append(i)
+    return answer
 
