@@ -129,4 +129,35 @@ def solution(array, n):
 # 피자를 나눠먹을 사람의 수 n이 매개변수로 주어질 때,
 # n명이 주문한 피자를 남기지 않고 모두 같은 수의 피자 조각을 먹어야 한다면
 # 최소 몇 판을 시켜야 하는지를 return 하도록 solution 함수를 완성해보세요.
+def solution(n):
+    answer = 0
+    for i in range (0,(6*n)+1):
+        if i%n == 0 and i%6 == 0:  # 최소공배수를 구하였다.
+            answer = i//6
+            if answer != 0: # 최소공배수를 구하기 위해 값이 담겨지면 종료
+                break
+    return answer
+
+# 순서쌍의 개수
+# 순서쌍이란 두 개의 숫자를 순서를 정하여 짝지어 나타낸 쌍으로 (a, b)로 표기합니다.
+# 자연수 n이 매개변수로 주어질 때 두 숫자의 곱이 n인 자연수 순서쌍의 개수를 return하도록 solution 함수를 완성해주세요.
+def solution(n):
+    answer = []
+    for i in range(1, n+1):
+        if n%i == 0:
+            answer.extend([(i,n//i)])
+    return len(answer)
+
+# 편지
+# 머쓱이는 할머니께 생신 축하 편지를 쓰려고 합니다.
+# 할머니가 보시기 편하도록 글자 한 자 한 자를 가로 2cm 크기로 적으려고 하며,
+# 편지를 가로로만 적을 때, 축하 문구 message를 적기 위해
+# 필요한 편지지의 최소 가로길이를 return 하도록 solution 함수를 완성해주세요.
+# 제한사항
+#  공백도 하나의 문자로 취급합니다.
+#  1 ≤ message의 길이 ≤ 50
+#  편지지의 여백은 생각하지 않습니다.
+#  message는 영문 알파벳 대소문자, ‘!’, ‘~’ 또는 공백으로만 이루어져 있습니다.
+def solution(message):
+    return 2*len(message)
 
