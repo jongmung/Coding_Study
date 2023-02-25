@@ -161,3 +161,29 @@ def solution(n):
 def solution(message):
     return 2*len(message)
 
+# 배열의 유사도
+# 두 배열이 얼마나 유사한지 확인해보려고 합니다.
+# 문자열 배열 s1과 s2가 주어질 때 같은 원소의 개수를 return하도록 solution 함수를 완성해주세요.
+def solution(s1, s2):  
+    answer = 0
+    for i in range(len(s1)):
+        for j in range(len(s2)):
+            if s1[i]==s2[j]:
+                answer +=1
+    return answer
+# 다른사람 풀이
+def solution(s1, s2):
+    return len(set(s1).intersection(s2))
+
+# 자릿수 더하기
+# 정수 n이 매개변수로 주어질 때 n의 각 자리 숫자의 합을 return하도록 solution 함수를 완성해주세요
+def solution(n):
+    answer=0
+    while n>0 :
+        answer+=n%10
+        n//=10
+    return answer
+# 다른사람 풀이
+def solution(n):
+    N=[int(i) for i in str(n)]
+    return sum(N)
