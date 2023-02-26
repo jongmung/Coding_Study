@@ -213,9 +213,17 @@ def solution(my_string):
 # 문자열 str1, str2가 매개변수로 주어집니다.
 # str1 안에 str2가 있다면 1을 없다면 2를 return하도록 solution 함수를 완성해주세요.
 def solution(str1, str2):   
-    if str2 in str1:
+    if str2 in str1:   # in 연산자 이용
         answer = 1
     else:
         answer = 2
-    return answer
+    return answer   
 
+# 모음 제거
+# 영어에선 a, e, i, o, u 다섯 가지 알파벳을 모음으로 분류합니다.
+# 문자열 my_string이 매개변수로 주어질 때 모음을 제거한 문자열을 return하도록 solution 함수를 완성해주세요.
+import re
+def solution(my_string):
+    answer = re.sub("a|e|i|u|o",'',my_string)
+    return answer   # sub(regex, replacement, str) 문자열 str에서 regex 패턴을 찾고 해당하는 부분을 replacement로 변경합니다.
+                    # 이것을 이용하여 특정 문자를 삭제할 수 있습니다.
