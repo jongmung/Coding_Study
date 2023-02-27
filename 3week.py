@@ -12,3 +12,11 @@ def solution(n):
 # 다른사람 풀이
 def solution(n):
     return 1 if (n ** 0.5).is_integer() else 2
+
+# 가위바위보
+def solution(rsp):
+    result = {'2':'0','0':'5','5':'2'}
+    answer = ''
+    for i in rsp:
+        answer += result.get(i)
+    return answer
