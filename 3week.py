@@ -27,3 +27,16 @@ def solution(rsp):
 def solution(rsp):
     d = {'0':'5','2':'0','5':'2'}
     return ''.join(d[i] for i in rsp) # '',join을 이용하여 하나로 합쳐, dict[key]를 사용하여 value 값을 가져온다.
+
+# 암호 해독
+#  암호화된 문자열 cipher를 주고받습니다.
+#  그 문자열에서 code의 배수 번째 글자만 진짜 암호입니다.
+# 문자열 cipher와 정수 code가 매개변수로 주어질 때
+# 해독된 암호 문자열을 return하도록 solution 함수를 완성해주세요.
+def solution(cipher, code):
+    answer = ''
+    for i in range(code,len(cipher)+1):
+        if i % code == 0:
+            answer +=cipher[i-1]
+    return answer
+
