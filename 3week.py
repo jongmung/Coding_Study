@@ -67,5 +67,9 @@ def solution(n, t):
 def solution(my_string):
     return my_string.swapcase() # 대문자를 소문자로, 소문자는 대문자로 -> .swapcase()
 
+# n의 배수 고르기
+# 정수 n과 정수 배열 numlist가 매개변수로 주어질 때, numlist에서 n의 배수가 아닌 수들을 제거한 배열을 return하도록 solution 함수를 완성해주세요.
+def solution(n, numlist):
+    return ([i for i in numlist if i % n ==0])
 
 
