@@ -40,3 +40,32 @@ def solution(cipher, code):
             answer +=cipher[i-1]
     return answer
 
+# 직각삼각형 출력하기
+# "*"의 높이와 너비를 1이라고 했을 때,
+# "*"을 이용해 직각 이등변 삼각형을 그리려고합니다.
+# 정수 n 이 주어지면 높이와 너비가 n 인 직각 이등변 삼각형을 출력하도록 코드를 작성해보세요.
+n = int(input())
+for i in range(1,n+1):
+    print('*'*i,end='\n')
+
+# 세균 증식
+# 어떤 세균은 1시간에 두배만큼 증식한다고 합니다.
+# 처음 세균의 마리수 n과 경과한 시간 t가 매개변수로 주어질 때
+# t시간 후 세균의 수를 return하도록 solution 함수를 완성해주세요.
+def solution(n, t):
+    answer = n
+    for i in range(t):
+        answer = 2*answer
+    return answer
+# 다른사람 풀이
+def solution(n, t):
+    return n << t  # 비트시프트를 사용한다.
+
+# 대문자와 소문자
+# 문자열 my_string이 매개변수로 주어질 때,
+# 대문자는 소문자로 소문자는 대문자로 변환한 문자열을 return하도록 solution 함수를 완성해주세요.
+def solution(my_string):
+    return my_string.swapcase() # 대문자를 소문자로, 소문자는 대문자로 -> .swapcase()
+
+
+
