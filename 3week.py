@@ -132,3 +132,18 @@ def solution(my_string, num1, num2):
     my_string = list(my_string)
     my_string[num1],my_string[num2]=my_string[num2],my_string[num1]
     return answer.join(my_string)
+
+# 배열 회전시키기
+# 정수가 담긴 배열 numbers와 문자열 direction가 매개변수로 주어집니다.
+# 배열 numbers의 원소를 direction방향으로 한 칸씩 회전시킨 배열을 return하도록 solution 함수를 완성해주세요.
+def solution(numbers, direction):
+    answer = []
+    for i in range(len(numbers)):
+        if direction == "right":
+            answer = [numbers[-1]] + numbers[:len(numbers)-1]
+        else:
+            answer = numbers[1:] + [numbers[0]]
+    return answer
+# 다른사람 풀이
+def solution(numbers, direction):
+    return [numbers[-1]] + numbers[:-1] if direction == 'right' else numbers[1:] + [numbers[0]]
