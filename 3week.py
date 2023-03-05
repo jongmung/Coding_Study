@@ -147,3 +147,11 @@ def solution(numbers, direction):
 # 다른사람 풀이
 def solution(numbers, direction):
     return [numbers[-1]] + numbers[:-1] if direction == 'right' else numbers[1:] + [numbers[0]]
+
+# 
+def solution(age):
+    answer = ''
+    a = ["a","b","c","d","e","f","g","h","i","j"]
+    for i in str(age):
+        answer += a[int(i)]
+    return answer
