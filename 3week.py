@@ -148,10 +148,22 @@ def solution(numbers, direction):
 def solution(numbers, direction):
     return [numbers[-1]] + numbers[:-1] if direction == 'right' else numbers[1:] + [numbers[0]]
 
-# 
+# 외계행성의 나이
+#  a는 0, b는 1, c는 2, ..., j는 9입니다.
+# 예를 들어 23살은 cd, 51살은 fb로 표현합니다.
+# 나이 age가 매개변수로 주어질 때 PROGRAMMER-962식 나이를 return하도록 solution 함수를 완성해주세요.
 def solution(age):
     answer = ''
     a = ["a","b","c","d","e","f","g","h","i","j"]
     for i in str(age):
         answer += a[int(i)]
+    return answer
+
+# 약수 구하기
+# 정수 n이 매개변수로 주어질 때, n의 약수를 오름차순으로 담은 배열을 return하도록 solution 함수를 완성해주세요.
+def solution(n):
+    answer = []
+    for i in range(1, n+1):
+        if n%i == 0:
+            answer.append(i)
     return answer
