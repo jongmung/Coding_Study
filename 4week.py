@@ -55,3 +55,6 @@ def solution(numbers, k):
         answer %= len(numbers)
         k -= 1
     return numbers[answer]
+# 다른사람 풀이
+def solution(numbers, k):
+    return numbers[2 * (k - 1) % len(numbers)]
