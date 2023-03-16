@@ -107,3 +107,8 @@ def solution(my_string):
 def solution(my_string):
     return sum(int(i) for i in my_string.replace(' - ', ' + -').split(' + '))
 
+# 잘라서 배열로 저장하기
+# 문자열 my_str과 n이 매개변수로 주어질 때,
+# my_str을 길이 n씩 잘라서 저장한 배열을 return하도록 solution 함수를 완성해주세요.
+def solution(my_str, n):
+    return [my_str[i:i+n] for i in range(0, len(my_str),n)]
