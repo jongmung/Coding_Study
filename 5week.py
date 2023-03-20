@@ -13,3 +13,7 @@ def solution(a, b):
     while b%5==0:
         b//=5
     return 1 if b==1 else 2
+
+# 다른사람 풀이
+def solution(a, b):
+    return 1 if a/b * 1000 % 1 == 0 else 2
