@@ -29,7 +29,7 @@ def solution(num, total):
 # 평행
 # 점 네 개의 좌표를 담은 이차원 배열  dots가 다음과 같이 매개변수로 주어집니다.
 #  [[x1, y1], [x2, y2], [x3, y3], [x4, y4]]
-#주어진 네 개의 점을 두 개씩 이었을 때, 두 직선이 평행이 되는 경우가 있으면 1을 없으면 0을 return 하도록 solution 함수를 완성해보세요.
+# 주어진 네 개의 점을 두 개씩 이었을 때, 두 직선이 평행이 되는 경우가 있으면 1을 없으면 0을 return 하도록 solution 함수를 완성해보세요.
 def solution(dots):
     answer = 0
     if slope(dots[0],dots[1]) == slope(dots[2],dots[3]):
@@ -39,6 +39,26 @@ def solution(dots):
     if slope(dots[0],dots[3]) == slope(dots[1],dots[2]):
         answer = 1
     return answer
-
+# 다른사람 풀이
 def slope(dot1,dot2):
     return (dot2[1] - dot1[1] ) / (dot2[0] - dot1[0])
+
+# 개미 군단
+# 개미 군단이 사냥을 나가려고 합니다.
+# 개미군단은 사냥감의 체력에 딱 맞는 병력을 데리고 나가려고 합니다.
+# 장군개미는 5의 공격력을, 병정개미는 3의 공격력을 일개미는 1의 공격력을 가지고 있습니다.
+# 예를 들어 체력 23의 여치를 사냥하려고 할 때, 일개미 23마리를 데리고 가도 되지만,
+# 장군개미 네 마리와 병정개미 한 마리를 데리고 간다면 더 적은 병력으로 사냥할 수 있습니다.
+# 사냥감의 체력 hp가 매개변수로 주어질 때,
+# 사냥감의 체력에 딱 맞게 최소한의 병력을 구성하려면 몇 마리의 개미가 필요한지를 return하도록 solution 함수를 완성해주세요.
+def solution(hp):
+    answer = 0
+    if hp//5>0:
+        answer += (hp//5)
+        hp = hp%5
+    if hp//3>0:
+        answer += (hp//3)
+        hp= hp%3
+    if hp//1>0:
+        answer+=(hp//1)
+    return answer
