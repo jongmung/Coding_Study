@@ -166,3 +166,17 @@ def solution(spell, dic):
 # 한 번만 등장하는 문자가 없을 경우 빈 문자열을 return 합니다.
 def solution(s):
     return ''.join(sorted(i for i in s if s.count(i) == 1))
+
+# 정수 배열 array와 정수 n이 매개변수로 주어질 때,
+# array에 들어있는 정수 중 n과 가장 가까운 수를 return 하도록 solution 함수를 완성해주세요.
+def solution(array, n):
+    array.sort()
+    answer = 0
+    com = n+100
+    for i in array:
+        if abs(i-n) < com:
+            com = abs(i-n)
+            answer = i
+    return answer
+# 다른사람 풀이
+solution=lambda a,n:sorted(a,key=lambda x:(abs(x-n),x))[0]
