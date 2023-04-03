@@ -196,3 +196,20 @@ def solution(num_list, n):
     for i in range(0, len(num_list), n):
         answer.append(num_list[i:i+n])
     return answer
+
+# 저주의 숫자 3
+# 3x 마을 사람들은 3을 저주의 숫자라고 생각하기 때문에 3의 배수와 숫자 3을 사용하지 않습니다.
+# 3x 마을 사람들의 숫자는 다음과 같습니다.
+# 10진법  3x마을숫자  10진법  3x마을숫자
+#   1       1 	     6       8
+#   2	    2	     7	    10
+#   3	    4	     8	    11
+#   4	    5	     9	    14
+#   5	    7	     10	    16
+def solution(n):
+    answer = 0
+    for i in range(n):
+        answer += 1
+        while answer%3 == 0 or '3' in str(answer):
+            answer += 1
+    return answer
