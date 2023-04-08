@@ -287,3 +287,13 @@ def solution(lines):
 def solution(lines):
     sets = [set(range(min(l), max(l))) for l in lines]
     return len(sets[0] & sets[1] | sets[0] & sets[2] | sets[1] & sets[2])
+
+# 다음에 올 숫자 
+#
+def solution(common):
+    answer = 0
+    if common[1] - common[0] == common[2] - common[1]: 
+        answer = common[-1] + (common[1] - common[0])
+    elif common[1]/common[0] == common[2]/common[1]:
+        answer = common[-1] * (common[1]/common[0])
+    return answer
