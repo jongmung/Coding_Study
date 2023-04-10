@@ -344,8 +344,7 @@ def solution(equations):
 # 동류항끼리 더한 결괏값을 문자열로 return 하도록 solution 함수를 완성해보세요.
 # 같은 식이라면 가장 짧은 수식을 return 합니다.
 def solution(polynomial):
-    polynomial = polynomial.replace(' ', '').split('+')
-    
+    polynomial = polynomial.replace(' ', '').split('+')   
     a, b = 0, 0
     for i in polynomial:
         if 'x' in i:
@@ -355,7 +354,6 @@ def solution(polynomial):
                 a +=1
         else:
             b += int(i)
-    
     if a == 0:
         return '{}'.format(b)
     elif a == 1:
