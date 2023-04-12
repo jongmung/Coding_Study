@@ -366,6 +366,7 @@ def solution(polynomial):
             return '{}x'.format(a)
         elif b != 0:
             return '{}x + {}'.format(a, b)
+    
         
 # 캐릭터의 좌표
 # 게임에는 up, down, left, right 방향키가 있으며 각 키를 누르면 위, 아래, 왼쪽, 오른쪽으로 한 칸씩 이동합니다.
@@ -387,3 +388,20 @@ def solution(keyinput, board):
         elif i == "down" and result[1]-1 >= -(row // 2):
             result[1] -= 1
     return result
+
+# 로그인 성공?
+
+def solution(id_pw, db):
+    for i in db:
+        # id 여부 확인
+        if id_pw[0] in i:
+            if id_pw[1] == i[1]:
+                return "login"
+            else:
+                return "wrong pw"
+    return "fail"
+# 다른사람 풀이
+def solution(id_pw, db):
+    if db_pw := dict(db).get(id_pw[0]):
+        return "login" if db_pw == id_pw[1] else "wrong pw"
+    return "fail"
