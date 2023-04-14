@@ -451,6 +451,8 @@ def solution(board):
     return n*n - sum(0 <= i < n and 0 <= j < n for i, j in danger)
 
 # 합성수 찾기
+# 약수의 개수가 세 개 이상인 수를 합성수라고 합니다.
+# 자연수 n이 매개변수로 주어질 때 n이하의 합성수의 개수를 return하도록 solution 함수를 완성해주세요.
 def solution(n):
     answer = 0
     for i in range(n+1):
@@ -459,6 +461,14 @@ def solution(n):
             if i % j == 0:
                 c += 1
         if c >= 3:
-            answer += 1
-        
+            answer += 1        
     return answer
+# 다른사람 풀이
+def solution(n):
+    output = 0
+    for i in range(4, n + 1):
+        for j in range(2, int(i ** 0.5) + 1):
+            if i % j == 0:
+                output += 1
+                break
+    return output
