@@ -449,3 +449,16 @@ def solution(board):
                 continue
             danger.update((i+di, j+dj) for di in [-1,0,1] for dj in [-1, 0, 1])
     return n*n - sum(0 <= i < n and 0 <= j < n for i, j in danger)
+
+# 합성수 찾기
+def solution(n):
+    answer = 0
+    for i in range(n+1):
+        c = 0
+        for j in range(1, i+1):
+            if i % j == 0:
+                c += 1
+        if c >= 3:
+            answer += 1
+        
+    return answer
