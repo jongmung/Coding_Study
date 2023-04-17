@@ -10,3 +10,13 @@ def solution(n):
 # 다른사람 풀이
 def solution(n):
     return [x for x in range(1,n+1) if n%x==1][0]
+
+# 음양 더하기
+def solution(absolutes, signs):
+    answer = 0
+    for i in range(len(absolutes)):
+        if signs[i]:
+            answer += absolutes[i]
+        else:
+            answer -= absolutes[i]
+    return answer
