@@ -27,3 +27,11 @@ def solution(absolutes, signs):
 # 다른사람 풀이
 def solution(absolutes, signs):
     return sum(absolutes if sign else -absolutes for absolutes, sign in zip(absolutes, signs))
+
+# 없는 숫자 더하기
+def solution(numbers):
+    answer = 0
+    for i in range(10):
+        if i not in numbers:
+            answer += i
+    return answer
