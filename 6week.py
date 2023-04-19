@@ -40,3 +40,12 @@ def solution(numbers):
 # 다른사람 풀이
 def solution(numbers):
     return 45 - sum(numbers)
+
+# 가운데 글자 가져오기
+# 
+def solution(s):
+    center = int(len(s)/2)
+    if len(s) % 2 != 0:
+        return s[center]
+    else:
+        return s[center-1:center+1]
