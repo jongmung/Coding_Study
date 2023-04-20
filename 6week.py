@@ -63,3 +63,6 @@ def solution(a, b):
     for i in range(len(a)):
         answer += a[i]*b[i]
     return answer
+# 다른사람 풀이
+def solution(a, b):
+    return sum([x*y for x, y in zip(a,b)])
