@@ -159,3 +159,12 @@ def solution(number):
                 if number[i] + number[j] + number[k] == 0:
                     answer += 1
     return answer
+# 다른사람 풀이
+def solution (number) :
+    from itertools import combinations
+    cnt = 0
+    for i in combinations(number,3) :
+        if sum(i) == 0 :
+            cnt += 1
+    return cnt
+
