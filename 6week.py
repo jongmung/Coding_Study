@@ -235,3 +235,6 @@ def solution(array, commands):
         ary.sort()    # sort 함수로 정렬
         answer.append(ary[i[2]-1])    # k 번째 값 집어넣기
     return answer
+# 다른사람 풀이
+def solution(array, commands):
+    return list(map(lambda x:sorted(array[x[0]-1:x[1]])[x[2]-1], commands))
