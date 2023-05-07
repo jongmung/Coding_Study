@@ -167,3 +167,6 @@ def solution(number, n, m):
 # num이 n의 배수이면 1을 return n의 배수가 아니라면 0을 return하도록 solution 함수를 완성해주세요.
 def solution(num, n):
     return 1 if num%n==0 else 0
+# 다른사람 풀이
+def solution(num, n):
+    return int(not(num % n))
