@@ -231,5 +231,6 @@ else:
 str1, str2 = input().strip().split(' ')
 print(str1, end="")
 print(str2)
-
+# 다른사람 풀이
+print(input().strip().replace(' ', ''))
 
