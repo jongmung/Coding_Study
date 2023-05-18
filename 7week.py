@@ -239,3 +239,11 @@ print(input().strip().replace(' ', ''))
 # 모든 알파벳을 소문자로 변환하여 return 하는 solution 함수를 완성해 주세요.
 def solution(myString):
     return myString.lower()
+
+# 문자열 돌리기
+# 문자열 str이 주어집니다.
+# 문자열을 시계방향으로 90도 돌려서 아래 입출력 예와 같이 출력하는 코드를 작성해 보세요.
+str = input()
+for i in range(len(str)):
+    print(str[i])
+
