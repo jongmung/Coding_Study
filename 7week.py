@@ -284,3 +284,6 @@ def solution(a, b):
     answer1 = int(str(a) + str(b))
     answer2 = int(str(b) + str(a))
     return answer1 if answer1 >= answer2 else answer2
+# 다른사람 풀이
+def solution(a, b):
+    return int(max(f"{a}{b}", f"{b}{a}"))
