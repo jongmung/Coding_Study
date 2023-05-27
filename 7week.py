@@ -318,3 +318,8 @@ def solution(num_list):
 # num_list의 첫 번째 원소부터 n 번째 원소까지의 모든 원소를 담은 리스트를 return하도록 solution 함수를 완성해주세요.
 def solution(num_list, n):
     return num_list[:n]
+
+# 문자열로 변환
+# 정수 n이 주어질 때, n을 문자열로 변환하여 return하도록 solution 함수를 완성해주세요.
+def solution(n):
+    return str(n)
