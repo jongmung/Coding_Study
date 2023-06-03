@@ -343,3 +343,19 @@ def solution(myString):
 # 문자열의 앞의 n글자
 def solution(my_string, n):
     return my_string[:n]
+
+# 원소들의 곱과 합
+# 정수가 담긴 리스트 num_list가 주어질 때,
+# 모든 원소들의 곱이 모든 원소들의 합의 제곱보다 작으면 1을 크면 0을 return하도록 solution 함수를 완성해주세요.
+def solution(num_list):
+    answer = 0
+    a = 0
+    b = 1
+    for i in range(len(num_list)):
+        a += num_list[i]
+        b *= num_list[i]
+    if a*a > b:
+        answer = 1
+    else:
+        answer = 0
+    return answer
