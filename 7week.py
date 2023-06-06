@@ -398,3 +398,6 @@ def solution(n):
             if j%2 == 0:
                 answer += j*j           
     return answer
+# 다른사람 풀이
+def solution(n):
+    return sum(x ** (2 - x % 2) for x in range(n + 1) if n % 2 == x % 2)
