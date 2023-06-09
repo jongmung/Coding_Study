@@ -418,3 +418,9 @@ def solution(numbers, n):
 # n_str을 정수로 변환하여 return하도록 solution 함수를 완성해주세요.
 def solution(n_str):
     return int(n_str)
+
+# 가장 큰 수
+def solution(numbers):
+    numbers = list(map(str, numbers))
+    numbers.sort(key=lambda x: x * 3, reverse=True)
+    return str(int(''.join(numbers)))
