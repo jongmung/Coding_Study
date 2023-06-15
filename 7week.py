@@ -472,3 +472,6 @@ def solution(num_str):
         answer += num_str%10
         num_str //= 10
     return answer
+# 다른사람 풀이
+def solution(num_str):
+    return sum(map(int, list(num_str)))
