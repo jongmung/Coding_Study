@@ -476,11 +476,10 @@ def solution(num_str):
 def solution(num_str):
     return sum(map(int, list(num_str)))
 
-# 문제풀이
-def solution(num_str):
-    answer = 0
-    num_str = int(num_str)
-    while num_str>0:
-        answer += num_str%10
-        num_str //= 10
+# 카운트 업
+# 정수 start와 end가 주어질 때, start부터 end까지의 숫자를 차례로 담은 리스트를 return하도록 solution 함수를 완성해주세요.
+def solution(start, end):
+    answer = []
+    for i in range(start, end+1):
+        answer.append(i)
     return answer
