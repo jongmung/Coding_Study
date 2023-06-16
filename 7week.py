@@ -475,3 +475,12 @@ def solution(num_str):
 # 다른사람 풀이
 def solution(num_str):
     return sum(map(int, list(num_str)))
+
+# 문제풀이
+def solution(num_str):
+    answer = 0
+    num_str = int(num_str)
+    while num_str>0:
+        answer += num_str%10
+        num_str //= 10
+    return answer
