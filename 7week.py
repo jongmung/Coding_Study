@@ -521,3 +521,11 @@ def solution(my_string):
 # my_string에서 alp에 해당하는 모든 글자를 대문자로 바꾼 문자열을 return 하는 solution 함수를 작성해 주세요.
 def solution(my_string, alp):
     return my_string.replace(alp, alp.upper())
+
+# 꼬리 문자열
+def solution(str_list, ex):
+    answer = ''
+    for some_string in str_list:
+        if not ex in some_string:
+            answer += some_string
+    return answer
