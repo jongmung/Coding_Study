@@ -541,3 +541,18 @@ def solution(str_list, ex):
 # "A"가 아닌 모든 대문자 알파벳은 소문자 알파벳으로 변환하여 return 하는 solution 함수를 완성하세요.
 def solution(myString):
     return (myString.lower()).replace('a', 'A')
+
+# 배열 비교하기
+def solution(arr1, arr2):
+    answer = 0
+    if len(arr1) != len(arr2):
+        answer = -1 if len(arr2) > len(arr1) else 1
+    elif len(arr1) == len(arr2):
+        if sum(arr1) == sum(arr2):
+            answer = 0
+        else:
+            if sum(arr1) > sum(arr2):
+                answer = 1
+            else:
+                answer = -1
+    return answer
