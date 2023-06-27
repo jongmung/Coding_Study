@@ -577,3 +577,10 @@ def solution(my_string, index_list):
 # my_string에 나온 단어를 앞에서부터 순서대로 담은 문자열 배열을 return 하는 solution 함수를 작성해 주세요.
 def solution(my_string):
     return my_string.split()
+
+# 간단한 식 계산하기
+# 문자열 binomial이 매개변수로 주어집니다.
+# binomial은 "a op b" 형태의 이항식이고 a와 b는 음이 아닌 정수,
+# op는 '+', '-', '*' 중 하나입니다. 주어진 식을 계산한 정수를 return 하는 solution 함수를 작성해 주세요.
+def solution(binomial):
+    return eval(binomial)
