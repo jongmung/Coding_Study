@@ -617,3 +617,10 @@ def solution(arr, delete_list):
 # 만약 date1이 date2보다 앞서는 날짜라면 1을, 아니면 0을 return 하는 solution 함수를 완성해 주세요.
 def solution(date1, date2):
     return 1 if int("".join(map(str, date1))) < int("".join(map(str, date2))) else 0
+
+# 9로 나눈 나머지
+# 음이 아닌 정수를 9로 나눈 나머지는 그 정수의 각 자리 숫자의 합을 9로 나눈 나머지와 같은 것이 알려져 있습니다.
+# 이 사실을 이용하여 음이 아닌 정수가 문자열 number로 주어질 때,
+# 이 정수를 9로 나눈 나머지를 return 하는 solution 함수를 작성해주세요.
+def solution(number):
+    return int(number)%9
