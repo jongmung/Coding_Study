@@ -858,3 +858,9 @@ def solution(a, b):
 # 단, 알파벳 대문자와 소문자는 구분하지 않습니다.
 def solution(myString, pat):
     return 1 if pat.lower() in myString.lower() else 0
+
+# 5명씩
+# 최대 5명씩 탑승가능한 놀이기구를 타기 위해 줄을 서있는 사람들의 이름이 담긴 문자열 리스트 names가 주어질 때,
+# 앞에서 부터 5명씩 묶은 그룹의 가장 앞에 서있는 사람들의 이름을 담은 리스트를 return하도록 solution 함수를 완성해주세요. 마지막 그룹이 5명이 되지 않더라도 가장 앞에 있는 사람의 이름을 포함합니다.
+def solution(names):
+    return [names[i] for i in range(0, len(names), 5)]
