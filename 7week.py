@@ -864,3 +864,10 @@ def solution(myString, pat):
 # 앞에서 부터 5명씩 묶은 그룹의 가장 앞에 서있는 사람들의 이름을 담은 리스트를 return하도록 solution 함수를 완성해주세요. 마지막 그룹이 5명이 되지 않더라도 가장 앞에 있는 사람의 이름을 포함합니다.
 def solution(names):
     return [names[i] for i in range(0, len(names), 5)]
+
+# ad 제거하기
+# 문자열 배열 strArr가 주어집니다.
+# 배열 내의 문자열 중 "ad"라는 부분 문자열을 포함하고 있는 모든 문자열을 제거하고
+# 남은 문자열을 순서를 유지하여 배열로 return 하는 solution 함수를 완성해 주세요.
+def solution(strArr):
+    return [char for char in strArr if "ad" not in char]
