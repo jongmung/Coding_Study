@@ -1000,3 +1000,6 @@ def solution(my_string, s, e):
     a = a[::-1]
     answer += a+ my_string[e+1:]
     return answer
+# 다른사람 풀이
+def solution(my_string, s, e):
+    return my_string[:s]+my_string[s:e+1][::-1]+my_string[e+1:]
