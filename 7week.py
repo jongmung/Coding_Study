@@ -1003,3 +1003,16 @@ def solution(my_string, s, e):
 # 다른사람 풀이
 def solution(my_string, s, e):
     return my_string[:s]+my_string[s:e+1][::-1]+my_string[e+1:]
+
+# 이어 붙인 수
+# 정수가 담긴 리스트 num_list가 주어집니다.
+# num_list의 홀수만 순서대로 이어 붙인 수와 짝수만 순서대로 이어 붙인 수의 합을 return하도록 solution 함수를 완성해주세요.
+def solution(num_list):
+    o = 0
+    e = 0
+    for i in num_list:
+        if i % 2==0:
+            e = e*10 + i
+        else:
+            o = o*10 +i
+    return o+e
