@@ -1044,6 +1044,8 @@ def solution(my_string, is_prefix):
             answer = 1
     return answer
 # 다른사람 풀이
+def solution(my_string, is_suffix):
+    return int(my_string.startswith(is_suffix))
 
 # 접미사인지 확인하기
 # 어떤 문자열에 대해서 접미사는 특정 인덱스부터 시작하는 문자열을 의미합니다.
