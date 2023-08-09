@@ -1064,3 +1064,19 @@ def solution(q, r, code):
         if idx % q == r:
             answer += val
     return answer
+
+# 커피 심부름
+# 아메리카노와 카페 라테의 가격은 차가운 것과 뜨거운 것 상관없이 각각 4500, 5000원입니다.
+# 각 팀원에게 마실 메뉴를 적어달라고 하였고,
+# 그 중에서 메뉴만 적은 팀원의 것은 차가운 것으로 통일하고
+# "아무거나"를 적은 팀원의 것은 차가운 아메리카노로 통일하기로 하였습니다.
+def solution(order):
+    answer = 0
+    for i in order:
+        if 'americano' in i:
+            answer +=4500
+        elif 'cafelatte' in i:
+            answer += 5000
+        else:
+            answer += 4500
+    return answer
