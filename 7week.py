@@ -1161,3 +1161,14 @@ def solution(code):
             if idx % 2 == 1 and val != "1":
                 answer += val
     return answer if answer!="" else "EMPTY"
+
+# 특별한 이차원 배열2
+# n × n 크기의 이차원 배열 arr이 매개변수로 주어질 때,
+# arr이 다음을 만족하면 1을 아니라면 0을 return 하는 solution 함수를 작성해 주세요.
+def solution(arr):
+    answer = 1
+    for i in range(0, len(arr)):
+        for j in range(0, len(arr[i])):
+            if arr[i][j] != arr[j][i]:
+                answer = 0
+    return answer
