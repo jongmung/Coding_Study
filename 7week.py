@@ -1179,3 +1179,13 @@ def solution(arr):
 # arr[i][j] (0 ≤ i, j < n)의 값은 i = j라면 1, 아니라면 0입니다.
 def solution(n):
     return [[1 if i == j else 0 for i in range(n)] for j in range(n)]
+
+# 이차원 배열 대각선 순회하기
+# 2차원 정수 배열 board와 정수 k가 주어집니다.
+# i + j <= k를 만족하는 모든 (i, j)에 대한 board[i][j]의 합을 return 하는 solution 함수를 완성해 주세요.
+def solution(board, k):
+    answer = 0
+    for i in range(min(k + 1, len(board))):
+        for j in range(min(k + 1 - i, len(board[i]))):
+            answer += board[i][j]
+    return answer
