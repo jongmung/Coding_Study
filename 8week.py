@@ -167,3 +167,39 @@ def solution(arr):
         idx += 1
         prev = change
     return idx
+
+# 정수를 나선형으로 배치하기
+# 양의 정수 n이 매개변수로 주어집니다. n × n 배열에 1부터 n2 까지
+# 정수를 인덱스 [0][0]부터 시계방향 나선형으로 배치한 이차원 배열을 return 하는 solution 함수를 작성해 주세요.
+def solution(n):
+    array = [[0] * n for _ in range(n)]
+
+    count = 1
+
+    startRow = 0
+    endRow = n - 1
+    startCol = 0
+    endCol = n - 1
+
+    while count <= n * n:
+        for i in range(startCol, endCol + 1):
+            array[startRow][i] = count
+            count += 1
+        startRow += 1
+
+        for i in range(startRow, endCol + 1):
+            array[i][endCol] = count
+            count += 1
+        endCol -= 1
+
+        for i in range(endCol, startCol - 1, -1):
+            array[endRow][i] = count
+            count += 1
+        endRow -= 1
+
+        for i in range(endRow, startRow - 1, -1):
+            array[i][startCol] = count
+            count += 1
+        startCol += 1
+
+    return array
