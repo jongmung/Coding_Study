@@ -336,3 +336,8 @@ def solution(arr, intervals):
         answer = intervals[i]
         a += arr[answer[0]:answer[1]+1]
     return a
+# 다른사람 풀이
+def solution(arr, intervals):
+    s1, e1 = intervals[0]
+    s2, e2 = intervals[1]
+    return arr[s1:e1+1] + arr[s2:e2+1]
