@@ -451,3 +451,21 @@ def solution(name, yearning, photo):
                 score += yearning[name.index(n)]
         answer.append(score)
     return answer
+
+# 가장 가까운 같은 글자
+# 문자열 s가 주어졌을 때, s의 각 위치마다 자신보다 앞에 나왔으면서,
+# 자신과 가장 가까운 곳에 있는 같은 글자가 어디 있는지 알고 싶습니다.
+# 예를 들어, s="banana"라고 할 때,
+# 각 글자들을 왼쪽부터 오른쪽으로 읽어 나가면서 다음과 같이 진행할 수 있습니다.
+# banana = [-1,-1,-1,2,2,2]
+# 문자열 s이 주어질 때, 위와 같이 정의된 연산을 수행하는 함수 solution을 완성해주세요.
+def solution(s):
+    answer = []
+    s_dict = dict()
+    for i in range(len(s)):
+        if s[i] not in s_dict:
+            answer.append(-1)
+        else:
+            answer.append(i-s_dict[s[i]])
+        s_dict[s[i]] = i
+    return answer
