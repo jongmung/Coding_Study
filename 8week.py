@@ -550,3 +550,19 @@ def solution(n, m, section):
             answer += 1
             paint = section[i]
     return answer
+
+# 콜라 문제
+# 콜라를 받기 위해 마트에 주어야 하는 병 수 a,
+# 빈 병 a개를 가져다 주면 마트가 주는 콜라 병 수 b,
+# 상빈이가 가지고 있는 빈 병의 개수 n이 매개변수로 주어집니다.
+# 상빈이가 받을 수 있는 콜라의 병 수를 return 하도록 solution 함수를 작성해주세요.
+# 보유 중인 빈 병이 a개 미만이면, 추가적으로 빈 병을 받을 순 없습니다
+def solution(a, b, n):
+    answer = 0
+    # 가지고 있는 콜라병이 교환 가능한 동안에
+    while n >= a:
+        # 빈 병 개수 추가
+        answer += (n // a * b)
+        # 교환하지 못하고 남은 병 + 새로 얻은 콜라
+        n = (n % a) + (n // a * b) 
+    return answer
