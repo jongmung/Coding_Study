@@ -615,3 +615,27 @@ def solution(k, score):
                 a.append(i)
         answer.append(min(a))
     return answer
+
+# 기사단원의 무기
+# 각 기사는 자신의 기사 번호의 약수 개수에 해당하는 공격력을 가진 무기를 구매하려 합니다.
+# 단, 이웃나라와의 협약에 의해 공격력의 제한수치를 정하고,
+# 제한수치보다 큰 공격력을 가진 무기를 구매해야 하는 기사는 협약기관에서 정한 공격력을 가지는 무기를 구매해야 합니다.
+# 무기를 만들 때, 무기의 공격력 1당 1kg의 철이 필요합니다.
+# 그래서 무기점에서 무기를 모두 만들기 위해 필요한 철의 무게를 미리 계산하려 합니다.
+# 기사단원의 수를 나타내는 정수 number와 이웃나라와 협약으로 정해진 공격력의 제한수치를 나타내는 정수 limit와
+# 제한수치를 초과한 기사가 사용할 무기의 공격력을 나타내는 정수 power가 주어졌을 때,
+# 무기점의 주인이 무기를 모두 만들기 위해 필요한 철의 무게를 return 하는 solution 함수를 완성하시오.
+def solution(number, limit, power):
+    answer = 0
+    kg=[]
+    for i in range(1,number+1):
+        cnt=0
+        for j in range(1,int(i**0.5)+1):
+            if(i%j==0):
+                cnt+=2
+                if j**2==i: cnt-=1
+            if cnt>limit:
+                cnt=power
+                break
+        kg.append(cnt)
+    return sum(kg)
