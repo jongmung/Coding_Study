@@ -695,3 +695,24 @@ def solution(d, budget):
     while budget < sum(d):
         d.pop()
     return len(d)
+
+# 소수 만들기
+# 주어진 숫자 중 3개의 수를 더했을 때 소수가 되는 경우의 개수를 구하려고 합니다.
+# 숫자들이 들어있는 배열 nums가 매개변수로 주어질 때,
+# nums에 있는 숫자들 중 서로 다른 3개를 골라 더했을 때 
+# 소수가 되는 경우의 개수를 return 하도록 solution 함수를 완성해주세요.
+from itertools import combinations
+import math
+def is_prime_number(x):
+    #2부터 x의 제곱근까지의 모든 수를 확인하며
+    for i in range(2, int(math.sqrt(x))+1):
+        #x가 해당 수로 나누어 떨어진다면
+        if x % i == 0:
+            return False # 소수가 아님
+    return True # 소수임
+def solution(nums):
+    answer = 0
+    for x in combinations(nums, 3):
+        if is_prime_number(sum(x)):
+            answer += 1
+    return answer
