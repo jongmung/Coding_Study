@@ -794,3 +794,15 @@ def solution(keymap, targets):
         answer.append(times)        
         # targets에 있는 하나의 단어에 대해 수행이 끝났으면 answer에 누른 키 총합을 넣어줌
     return answer
+
+# 실패율
+def solution(N, stages):
+    People = len(stages)
+    faillist = {}
+    for i in range(1, N + 1):
+        if People != 0:
+            faillist[i] = stages.count(i) / People
+            People -= stages.count(i)
+        else:
+            faillist[i] = 0
+    return sorted(faillist, key=lambda i: faillist[i], reverse=True)
