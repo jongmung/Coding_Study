@@ -811,3 +811,16 @@ def solution(N, stages):
         else:
             faillist[i] = 0
     return sorted(faillist, key=lambda i: faillist[i], reverse=True)
+
+# 로또의 최고 순위와 최저 순위
+# 알아볼 수 없는 번호를 0으로 표기하기로 하고, 
+# 민우가 구매한 로또 번호를 담은 배열 lottos, 당첨 번호를 담은 배열 win_nums가 매개변수로 주어집니다.
+# 이때, 당첨 가능한 최고 순위와 최저 순위를 차례대로 배열에 담아서 return 하도록 solution 함수를 완성해주세요.
+def solution(lottos, win_nums):
+    rank=[6,6,5,4,3,2,1] # 딕셔너리 쓰지않고 순서대로 당첨 내용 리스트로!
+    cnt_0 = lottos.count(0) # 찾고자 하는 항목이 파이썬의 리스트에 몇개나 들어있는지 확인하는 count 함수
+    ans = 0
+    for x in win_nums:
+        if x in lottos:
+            ans += 1
+    return rank[cnt_0 + ans],rank[ans]
