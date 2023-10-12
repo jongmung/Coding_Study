@@ -889,3 +889,18 @@ def solution(survey, choices):
         if li[i][1] < li[i+1][1]: answer += li[i+1][0]
         else:   answer += li[i][0]
     return answer
+
+# [1차] 비밀지도
+def solution(n, arr1, arr2):
+    answer = []
+    
+    for i in range(n):
+        tmp = bin(arr1[i] | arr2[i])
+        # tmp결과 ex) '0b1101'
+        tmp = tmp[2:].zfill(n)
+        # tmp결과 ex) '01101'
+        tmp = tmp.replace('1','#').replace('0',' ')
+        # tmp결과 ex) ' ## #'
+        answer.append(tmp)
+    
+    return answer
