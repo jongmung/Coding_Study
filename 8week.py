@@ -904,3 +904,21 @@ def solution(n, arr1, arr2):
         answer.append(tmp)
     
     return answer
+
+# 크레인 인형뽑기 게임
+def solution(board, moves):
+    stacklist = []
+    answer = 0
+    for i in moves:
+        for j in range(len(board)):
+            if board[j][i-1] != 0:
+                stacklist.append(board[j][i-1])
+                board[j][i-1] = 0
+
+                if len(stacklist) > 1:
+                    if stacklist[-1] == stacklist[-2]:
+                        stacklist.pop(-1)
+                        stacklist.pop(-1)
+                        answer += 2     
+                break
+    return answer
