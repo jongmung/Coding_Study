@@ -930,3 +930,18 @@ def solution(board, moves):
 def solution(s):
     arr = list(map(int, s.split(' ')))
     return str(min(arr)) + " " + str(max(arr))
+
+# JadenCase 문자열 만들기
+# JadenCase란 모든 단어의 첫 문자가 대문자이고, 그 외의 알파벳은 소문자인 문자열입니다.
+# 단, 첫 문자가 알파벳이 아닐 때에는 이어지는 알파벳은 소문자로 쓰면 됩니다. (첫 번째 입출력 예 참고)
+# 문자열 s가 주어졌을 때, s를 JadenCase로 바꾼 문자열을 리턴하는 함수, solution을 완성해주세요.
+def solution(s):
+    answer = ''
+    s=s.split(' ')
+    for i in range(len(s)):
+        # capitalize 내장함수를 사용하면 첫 문자가 알파벳일 경우 대문자로 만들고
+        # 두번째 문자부터는 자동으로 소문자로 만든다
+        # 첫 문자가 알파벳이 아니면 그대로 리턴한다
+        s[i]=s[i].capitalize()
+    answer=' '.join(s)
+    return answer
