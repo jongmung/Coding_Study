@@ -1008,3 +1008,10 @@ def solution(s):
         else: stack.append(i)
     if len(stack) == 0: return 1
     else: return 0
+    
+# 피보나치 수
+def solution(n):
+    a,b = 0,1
+    for i in range(n):
+        a,b = b,a+b
+    return a
