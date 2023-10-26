@@ -1056,3 +1056,19 @@ def solution(n):
     for i in range(3,n+1):
         d[i]=d[i-1]+d[i-2]
     return d[n]%1234567
+
+# 귤 고르기
+from collections import Counter
+def solution(k, tangerine):
+    answer = 0
+    counter=Counter(tangerine)
+    # {3: 2, 2: 2, 5: 2, 1: 1, 4: 1}
+    sort_=sorted(counter.items(),key=lambda x:x[1],reverse=True)
+    #정렬된 딕셔너리로 귤 개수 맞추기
+    cnt=0
+    for i in sort_:
+        k-=i[1]
+        answer+=1
+        if k<=0:
+            break
+    return answer
