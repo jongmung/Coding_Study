@@ -1211,3 +1211,42 @@ def solution(elements):
         for j in range(elementLen):
             result.add(sum(elements[j:j+i+1]))
     return len(result)
+
+# 괄호 회전하기
+# 다음 규칙을 지키는 문자열을 올바른 괄호 문자열이라고 정의합니다.
+#   (), [], {} 는 모두 올바른 괄호 문자열입니다.
+#   만약 A가 올바른 괄호 문자열이라면, (A), [A], {A} 도 올바른 괄호 문자열입니다.
+#   예를 들어, [] 가 올바른 괄호 문자열이므로, ([]) 도 올바른 괄호 문자열입니다.
+#   만약 A, B가 올바른 괄호 문자열이라면, AB 도 올바른 괄호 문자열입니다.
+#   예를 들어, {} 와 ([]) 가 올바른 괄호 문자열이므로, {}([]) 도 올바른 괄호 문자열입니다.
+# 대괄호, 중괄호, 그리고 소괄호로 이루어진 문자열 s가 매개변수로 주어집니다.
+# 이 s를 왼쪽으로 x (0 ≤ x < (s의 길이)) 칸만큼 회전시켰을 때
+# s가 올바른 괄호 문자열이 되게 하는 x의 개수를 return 하도록 solution 함수를 완성해주세요.
+def solution(s):
+    answer= 0
+    # 우선 리스트로 변경
+    temp=list(s)
+    # 리스트의 길이만킅 for문을 돌려 리스트 회전 
+    for _ in range(len(s)):
+        stack = []
+    # 스택에 아무것도 없으면 괄호를 추가 같으면 제거
+        for j in range(len(temp)):
+            if len(stack) >0 :
+                if stack[-1] == "(" and temp[j]==")":
+                    stack.pop()
+                elif stack[-1] =="[" and temp[j]=="]":
+                    stack.pop()
+                elif stack[-1] == "{" and temp[j]=="}":
+                    stack.pop()
+                # 만약에 마지막에 있는 문자가 다르면 추가    
+                else:
+                    stack.append(temp[j])
+            # 길이가 0이면 추가
+            else:
+                stack.append(temp[j])
+        # for문 다 돌았는데 길이 0 이면 정답하나 추가
+        if len(stack) == 0:
+            answer+=1
+        # 첫번째꺼 맨뒤로 보내고 다시 위에꺼 반복
+        temp.append(temp.pop(0))
+    return answer
