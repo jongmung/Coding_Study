@@ -1405,6 +1405,7 @@ def solution(clothes):
     # 4. 아무종류의 옷도 입지 않는 경우를 제외한 값 반환
     return result - 1
 
+# H-Index
 # H-Index는 과학자의 생산성과 영향력을 나타내는 지표입니다.
 # 어느 과학자의 H-Index를 나타내는 값인 h를 구하려고 합니다.
 # 위키백과1에 따르면, H-Index는 다음과 같이 구합니다.
@@ -1418,3 +1419,14 @@ def solution(citations):
         if idx >= citation:
             return idx
     return len(citations)
+
+# 행렬의 곱셈
+# 2차원 행렬 arr1과 arr2를 입력받아, arr1에 arr2를 곱한 결과를 반환하는 함수, solution을 완성해주세요.
+def solution(arr1, arr2):
+    answer = [[0]*len(arr2[0]) for _ in range(len(arr1))]
+    for i in range(len(arr1)): 
+        lists = []
+        for j in range(len(arr2[0])): 
+            for k in range(len(arr1[0])): 
+                answer[i][j] += arr1[i][k] * arr2[k][j]
+    return answer
