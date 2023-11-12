@@ -1430,3 +1430,34 @@ def solution(arr1, arr2):
             for k in range(len(arr1[0])): 
                 answer[i][j] += arr1[i][k] * arr2[k][j]
     return answer
+
+# 기능 개발
+# 프로그래머스 팀에서는 기능 개선 작업을 수행 중입니다.
+# 각 기능은 진도가 100%일 때 서비스에 반영할 수 있습니다.
+# 또, 각 기능의 개발속도는 모두 다르기 때문에 뒤에 있는 기능이 앞에 있는 기능보다 먼저 개발될 수 있고,
+# 이때 뒤에 있는 기능은 앞에 있는 기능이 배포될 때 함께 배포됩니다.
+# 먼저 배포되어야 하는 순서대로 작업의 진도가 적힌 정수 배열 progresses와
+# 각 작업의 개발 속도가 적힌 정수 배열 speeds가 주어질 때
+# 각 배포마다 몇 개의 기능이 배포되는지를 return 하도록 solution 함수를 완성하세요.
+def solution(progresses, speeds):
+    answer = []
+    days = 0 # 날짜 세기
+    cnt = 0 # 완료된 기능
+    while len(progresses) > 0:
+    	# 기능의 진행상황과 그 동안 지난 날짜만큼의 speed를 구해서 더하기
+        if(progresses[0]+days*speeds[0])>=100:
+            # 완료되면 리스트에서 제거
+            progresses.pop(0)
+            speeds.pop(0)
+            # 완료된 기능 수
+            cnt += 1
+        else:
+        	# 만약 완료된 기능이 있다면 answer에 더해주고 0으로 초기화
+            if cnt > 0:
+                answer.append(cnt)
+                cnt = 0
+            # 완료된 기능이 없으면 days 추가
+            else:
+                days+=1
+    answer.append(cnt)
+    return answer
