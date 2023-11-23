@@ -1628,6 +1628,11 @@ def solution(numbers):
 #   x에 3을 곱합니다.
 # 자연수 x, y, n이 매개변수로 주어질 때,
 # x를 y로 변환하기 위해 필요한 최소 연산 횟수를 return하도록 solution 함수를 완성해주세요. 이때 x를 y로 만들 수 없다면 -1을 return 해주세요.
+#   x를 y로 변환하기 위한 최소 연산의 수가 필요하기 때문에 set 을 활용했다.
+#   x 값을 dp에 우선 대입한다.
+#   y 가 dp에 있다면, 정답을 리턴
+#   dp를 돌면서, i+n i*2 i*3 3가지 연산 중 y보다 작거나 같으면 dp_y라는 set에 add한다.
+#   3번 연산을 마친 dp_y에 dp를 copy하면서 (answer+1)하면서 1~3 과정을 반복한다.
 def solution(x, y, n):
     answer = 0
     dp = set()
@@ -1647,3 +1652,18 @@ def solution(x, y, n):
             dp = dp_y
             answer += 1
     return -1
+
+# 2 x n 타일링
+# 가로 길이가 2이고 세로의 길이가 1인 직사각형모양의 타일이 있습니다.
+# 이 직사각형 타일을 이용하여 세로의 길이가 2이고 가로의 길이가 n인 바닥을 가득 채우려고 합니다.
+# 타일을 채울 때는 다음과 같이 2가지 방법이 있습니다.
+#   타일을 가로로 배치 하는 경우
+#   타일을 세로로 배치 하는 경우
+# 직사각형의 가로의 길이 n이 매개변수로 주어질 때,
+# 이 직사각형을 채우는 방법의 수를 return 하는 solution 함수를 완성해주세요.
+def solution(n):
+    dp = [0 for i in range(n)]
+    dp[0], dp[1] = 1, 2
+    for i in range(2, n):
+        dp[i] = (dp[i-1] + dp[i-2]) % 1000000007
+    return dp[n-1]
