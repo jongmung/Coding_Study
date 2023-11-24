@@ -1667,3 +1667,24 @@ def solution(n):
     for i in range(2, n):
         dp[i] = (dp[i-1] + dp[i-2]) % 1000000007
     return dp[n-1]
+
+# 스킬트리
+# 선행 스킬이란 어떤 스킬을 배우기 전에 먼저 배워야하는 스킬을 뜻합니다.
+#   예를 들어 선행 스킬 순서가 스파크 → 라이트닝 볼트 → 썬더일때,
+#   썬더를 배우려면 먼저 라이트닝 볼트를 배워야 하고,
+#   라이트닝 볼트를 배우려면 먼저 스파크를 배워야 합니다.
+# 위 순서에 없는 다른 스킬(힐링 등)은 순서에 상관없이 배울 수 있습니다.
+# 따라서 스파크 → 힐링 → 라이트닝 볼트 → 썬더와 같은 스킬트리는 가능하지만,
+# 썬더 → 스파크나 라이트닝 볼트 → 스파크 → 힐링 → 썬더와 같은 스킬트리는 불가능합니다.
+# 선행 스킬 순서 skill과 유저들이 만든 스킬트리1를 담은 배열 skill_trees가 매개변수로 주어질 때,
+# 가능한 스킬트리 개수를 return 하는 solution 함수를 작성해주세요.
+def solution(skill, skill_trees):
+    count = 0
+    for skill_tree in skill_trees:
+        s = ""                      # 하나의 스킬트리를 뽑을 때마다 s 초기화
+        for ch in skill_tree:       
+            if ch in skill:         # 스킬트리 중에 skill이 있다면 s에 추가
+                s += ch
+        if skill[:len(s)] == s:     # 만든 s를 기준으로 skill과 같다면 count += 1
+            count += 1
+    return count
