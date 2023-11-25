@@ -1688,3 +1688,18 @@ def solution(skill, skill_trees):
         if skill[:len(s)] == s:     # 만든 s를 기준으로 skill과 같다면 count += 1
             count += 1
     return count
+
+# 소수찾기
+# 한자리 숫자가 적힌 종이 조각이 흩어져있습니다.
+# 흩어진 종이 조각을 붙여 소수를 몇 개 만들 수 있는지 알아내려 합니다.
+# 각 종이 조각에 적힌 숫자가 적힌 문자열 numbers가 주어졌을 때,
+# 종이 조각으로 만들 수 있는 소수가 몇 개인지 return 하도록 solution 함수를 완성해주세요.
+from itertools import permutations
+def solution(n):
+    a = set()
+    for i in range(len(n)):
+        a |= set(map(int, map("".join, permutations(list(n), i + 1))))
+    a -= set(range(0, 2))
+    for i in range(2, int(max(a) ** 0.5) + 1):
+        a -= set(range(i * 2, max(a) + 1, i))
+    return len(a)
