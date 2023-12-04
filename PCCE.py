@@ -155,3 +155,29 @@ def solution(mode_type, humidity, val_set):
     elif mode_type == "minimum":
         answer = func3(humidity, val_set)
     return answer
+
+# [PCCE 기출문제] 8번 / 창고 정리
+# 예를 들어 창고의 각 칸에 담겨있는 물건의 이름이
+# storage = ["pencil", "pencil", "pencil", "book"],
+# 각 물건의 개수가 num = [2, 4, 3, 1]이라면
+# 연필과 책을 한 칸에 각각 겹쳐 쌓아 간단하게
+# clean_storage = ["pencil", "book"],
+# clean_num = [9, 1]로 만들 수 있습니다.
+# 주어진 solution 함수는 정리되기 전 창고의 물건 이름이 담긴 문자열 리스트 storage와
+# 각 물건의 개수가 담긴 정수 리스트 num이 주어질 때,
+# 정리된 창고에서 개수가 가장 많은 물건의 이름을 return 하는 함수입니다.
+# solution 함수가 올바르게 작동하도록 한 줄을 수정해 주세요.
+def solution(storage, num):
+    clean_storage = []
+    clean_num = []
+    for i in range(len(storage)):
+        if storage[i] in clean_storage:
+            pos = clean_storage.index(storage[i])
+            clean_num[pos] += num[i]
+        else:
+            clean_storage.append(storage[i])
+            clean_num.append(num[i])
+    # 아래 코드에는 틀린 부분이 없습니다.     
+    max_num = max(clean_num)
+    answer = clean_storage[clean_num.index(max_num)]
+    return answer
