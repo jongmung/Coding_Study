@@ -181,3 +181,37 @@ def solution(storage, num):
     max_num = max(clean_num)
     answer = clean_storage[clean_num.index(max_num)]
     return answer
+
+# [1차] 캐시
+# 어피치는 제이지에게 해당 로직을 개선하라고 닦달하기 시작하였고,
+# 제이지는 DB 캐시를 적용하여 성능 개선을 시도하고 있지만 캐시 크기를 얼마로 해야 효율적인지 몰라 난감한 상황이다.
+# 어피치에게 시달리는 제이지를 도와, DB 캐시를 적용할 때 캐시 크기에 따른 실행시간 측정 프로그램을 작성하시오.
+def solution(cacheSize, cities):
+    answer = 0
+    memolist=[]
+    
+    if cacheSize==0:
+        return len(cities)*5
+
+    else:
+        cities[0]=cities[0].upper()
+        memolist.append(cities[0])
+        answer+=5
+        
+        for i in range(1,len(cities)):
+            cities[i]=cities[i].upper()
+            check=True
+            
+            for j in range(len(memolist)):
+                if memolist[j]==cities[i]:
+                    memolist.remove(cities[i])
+                    memolist.append(cities[i])
+                    answer+=1
+                    check=False # 중복된거 있음!
+                    break
+            if  check:
+                answer+=5
+                if len(memolist)==cacheSize:
+                    memolist.pop(0)
+                memolist.append(cities[i])    
+    return answer
