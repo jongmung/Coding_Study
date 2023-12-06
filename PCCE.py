@@ -215,3 +215,23 @@ def solution(cacheSize, cities):
                     memolist.pop(0)
                 memolist.append(cities[i])    
     return answer
+
+# 튜플
+# 셀수있는 수량의 순서있는 열거 또는 어떤 순서를 따르는 요소들의 모음을 튜플(tuple)이라고 합니다.
+# n개의 요소를 가진 튜플을 n-튜플(n-tuple)이라고 하며, 다음과 같이 표현할 수 있습니다.
+# 원소의 개수가 n개이고,
+# 중복되는 원소가 없는 튜플 (a1, a2, a3, ..., an)이 주어질 때(단, a1, a2, ..., an은 자연수),
+# 이는 다음과 같이 집합 기호 '{', '}'를 이용해 표현할 수 있습니다.
+# 특정 튜플을 표현하는 집합이 담긴 문자열 s가 매개변수로 주어질 때,
+# s가 표현하는 튜플을 배열에 담아 return 하도록 solution 함수를 완성해주세요.
+def solution(s):
+    li=[]
+    for i in s.split("},"):
+        li.append(i.replace("{","").replace("}","").split(","))
+    li.sort(key=len)
+    answer=[]
+    for i in li:
+        for j in i:
+            if j not in answer:
+                answer.append(j)
+    return list(map(int,answer))
