@@ -299,3 +299,38 @@ def solution(maps):
     if answer ==1:
         answer = -1
     return answer
+
+# 주차 요금 계산
+# 주차장의 요금표와 차량이 들어오고(입차) 나간(출차) 기록이 주어졌을 때,
+# 차량별로 주차 요금을 계산하려고 합니다.
+# 아래는 하나의 예시를 나타냅니다.
+# 주차 요금을 나타내는 정수 배열 fees, 자동차의 입/출차 내역을 나타내는 문자열 배열 records가 매개변수로 주어집니다.
+# 차량 번호가 작은 자동차부터 청구할 주차 요금을 차례대로 정수 배열에 담아서 return 하도록 solution 함수를 완성해주세요.
+import math
+from collections import defaultdict
+
+def solution(fees, records):
+    answer = []
+    table = defaultdict(list)
+    
+    for i in range(len(records)):
+        time,number,state = records[i].split()
+        minutes = int(time[:2]) * 60 + int(time[3:])
+        table[number].append(minutes)
+    
+    for i in table :
+        if ( len(table[i] ) % 2 == 1 ) :
+            table[i].append(23*60+59)
+    
+    cars = sorted(table.keys())
+    
+    for c in cars :
+        money = 0
+        time = sum(table[c][1::2]) - sum(table[c][::2])
+        if time > fees[0] :
+            money += fees[1] + math.ceil((time - fees[0]) / fees[2]) * fees[3]
+        else :
+            money += fees[1]
+        answer.append(money)
+
+    return answer
