@@ -362,21 +362,14 @@ def solution(land):
 # 다리가 견딜 수 있는 무게 weight, 트럭 별 무게 truck_weights가 주어집니다.
 # 이때 모든 트럭이 다리를 건너려면 최소 몇 초가 걸리는지 return 하도록 solution 함수를 완성하세요.
 def solution(bridge_length, weight, truck_weights):
-    
-    answer = 0
-    bridge = [0 for _ in range(bridge_length)]
-    
-    while bridge:
-        
-        answer += 1
-        bridge.pop(0)
-        
+    q=[0]*bridge_length
+    sec=0
+    while q:
+        sec+=1
+        q.pop(0)
         if truck_weights:
-            if sum(bridge) + truck_weights[0] <= weight:            
-                t = truck_weights.pop(0)
-                bridge.append(t)
+            if sum(q)+truck_weights[0]<=weight:
+                q.append(truck_weights.pop(0))
             else:
-                bridge.append(0)
-                 
-         
-    return answer
+                q.append(0)
+    return sec
