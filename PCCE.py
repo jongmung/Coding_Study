@@ -416,3 +416,28 @@ def solution(sequence, k):
             sum -= sequence[l]
             l += 1
     return answer
+
+# 호텔 대실
+# 호텔을 운영 중인 코니는 최소한의 객실만을 사용하여 예약 손님들을 받으려고 합니다.
+# 한 번 사용한 객실은 퇴실 시간을 기준으로 10분간 청소를 하고 다음 손님들이 사용할 수 있습니다.
+# 예약 시각이 문자열 형태로 담긴 2차원 배열 book_time이 매개변수로 주어질 때,
+# 코니에게 필요한 최소 객실의 수를 return 하는 solution 함수를 완성해주세요.
+def solution(book_time):
+    # 풀이설명1 : 함수 만들기
+    def change_min(str_time: str) -> int:
+        return int(str_time[0:2]) * 60 + int(str_time[3:])
+    #풀이 설명2 : 예약 시간이 빠른 순으로 정렬하기
+    book_times = sorted([[change_min(i[0]), change_min(i[1]) + 10] for i in book_time])
+    #풀이 설명3 : 방 배정하기
+    rooms = []
+    for book_time in book_times:
+        if not rooms:
+            rooms.append(book_time)
+            continue
+        for index, room in enumerate(rooms):
+            if book_time[0] >= room[-1]:
+                rooms[index] = room + book_time
+                break
+        else:
+            rooms.append(book_time)
+    return len(rooms)
