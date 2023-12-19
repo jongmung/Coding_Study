@@ -519,3 +519,31 @@ def solution(weights):
         if i*3/4 in dic:
             answer += dic[i] * dic[i*3/4]
     return answer
+
+# 개인정보 수집 유효기간
+# 고객의 약관 동의를 얻어서 수집된 1~n번으로 분류되는 개인정보 n개가 있습니다.
+# 약관 종류는 여러 가지 있으며 각 약관마다 개인정보 보관 유효기간이 정해져 있습니다.
+# 당신은 각 개인정보가 어떤 약관으로 수집됐는지 알고 있습니다.
+# 수집된 개인정보는 유효기간 전까지만 보관 가능하며, 유효기간이 지났다면 반드시 파기해야 합니다.
+# 오늘 날짜를 의미하는 문자열 today, 약관의 유효기간을 담은 1차원 문자열 배열 terms와
+# 수집된 개인정보의 정보를 담은 1차원 문자열 배열 privacies가 매개변수로 주어집니다.
+# 이때 파기해야 할 개인정보의 번호를 오름차순으로 1차원 정수 배열에 담아 return 하도록 solution 함수를 완성해 주세요.
+def solution(today, terms, privacies):
+    d ={}
+    answer = []
+    today_lst = list(map(int,today.split('.'))) # 오늘 날짜 리스트로 변환
+    
+    for term in terms: # 약관종류와 개월수 딕셔너리로 저장
+        n, m = term.split()
+        d[n] = int(m)*28 # 한 달 일 수 곱해줌
+    
+    for i in range(len(privacies)):
+        date, s = privacies[i].split()
+        date_lst = list(map(int, date.split('.'))) # 수집일자 리스트로 변환
+        year = (today_lst[0] - date_lst[0])*336 # 연도 차이에 일 수 곱해주기
+        month = (today_lst[1] - date_lst[1])*28 # 달 수 차이에 일 수 곱해주기
+        day = today_lst[2] - date_lst[2]
+        total = year+month+day
+        if d[s] <= total:
+            answer.append(i+1)
+    return answer
