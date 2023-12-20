@@ -547,3 +547,24 @@ def solution(today, terms, privacies):
         if d[s] <= total:
             answer.append(i+1)
     return answer
+
+# 2개 이하로 다른 비트
+# 양의 정수 x에 대한 함수 f(x)를 다음과 같이 정의합니다.
+
+# x보다 크고 x와 비트가 1~2개 다른 수들 중에서 제일 작은 수
+#   예를 들어,
+#   f(2) = 3 입니다. 다음 표와 같이 2보다 큰 수들 중에서 비트가 다른 지점이 2개 이하이면서 제일 작은 수가 3이기 때문입니다.
+# 정수들이 담긴 배열 numbers가 매개변수로 주어집니다. 
+# numbers의 모든 수들에 대하여 각 수의 f 값을 배열에 차례대로 담아 return 하도록 solution 함수를 완성해주세요.
+def solution(numbers):
+    answer = []
+    for number in numbers:
+        bin_number = list('0' + bin(number)[2:])
+        idx = ''.join(bin_number).rfind('0')
+        bin_number[idx] = '1'
+        
+        if number % 2 == 1:
+            bin_number[idx+1] = '0'
+        
+        answer.append(int(''.join(bin_number), 2))
+    return answer
