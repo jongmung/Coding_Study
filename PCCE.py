@@ -586,3 +586,17 @@ def solution(n):
             answer += "4"
             n = n//3 - 1
     return answer[::-1]
+
+# 가장 큰 정사각형 찾기
+# 1와 0로 채워진 표(board)가 있습니다.
+# 표 1칸은 1 x 1 의 정사각형으로 이루어져 있습니다.
+# 표에서 1로 이루어진 가장 큰 정사각형을 찾아 넓이를 return 하는 solution 함수를 완성해 주세요.
+# (단, 정사각형이란 축에 평행한 정사각형을 말합니다.)
+def solution(board):
+    answer = board[0][0]
+    for i in range(1, len(board)):
+        for j in range(1, len(board[i])):
+            if board[i][j] == 1:
+                board[i][j] = 1 + min(board[i-1][j-1], board[i-1][j], board[i][j-1])
+                answer = max(answer, board[i][j])
+    return answer**2
