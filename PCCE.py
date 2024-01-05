@@ -909,3 +909,40 @@ def solution(name):
     # 알파벳 변경(상하이동) 횟수에 좌우이동 횟수 추가
     answer += min_move
     return answer
+
+# 신규 아이디 추천
+# 카카오에 입사한 신입 개발자 네오는 "카카오계정개발팀"에 배치되어,
+# 카카오 서비스에 가입하는 유저들의 아이디를 생성하는 업무를 담당하게 되었습니다.
+# "네오"에게 주어진 첫 업무는 새로 가입하는 유저들이 카카오 아이디 규칙에 맞지 않는 아이디를 입력했을 때,
+# 입력된 아이디와 유사하면서 규칙에 맞는 아이디를 추천해주는 프로그램을 개발하는 것입니다.
+# 다음은 카카오 아이디의 규칙입니다.
+#   아이디의 길이는 3자 이상 15자 이하여야 합니다.
+#   아이디는 알파벳 소문자, 숫자, 빼기(-), 밑줄(_), 마침표(.) 문자만 사용할 수 있습니다.
+#   단, 마침표(.)는 처음과 끝에 사용할 수 없으며 또한 연속으로 사용할 수 없습니다.
+# 신규 유저가 입력한 아이디를 나타내는 new_id가 매개변수로 주어질 때,
+# "네오"가 설계한 7단계의 처리 과정을 거친 후의 추천 아이디를 return 하도록 solution 함수를 완성해 주세요.
+def solution(new_id):
+    # 1단계
+    new_id = new_id.lower()
+    # 2단계
+    answer = ''
+    for word in new_id:
+        if word.isalnum() or word in '-_.':
+            answer += word
+    # 3단계
+    while '..' in answer:
+        answer = answer.replace('..', '.')
+    # 4단계
+    answer = answer[1:] if answer[0] == '.' and len(answer) > 1 else answer
+    answer = answer[:-1] if answer[-1] == '.' else answer
+    # 5단계
+    answer = 'a' if answer == '' else answer
+    # 6단계
+    if len(answer) >= 16:
+        answer = answer[:15]
+        if answer[-1] == '.':
+            answer = answer[:-1]
+    # 7단계
+    if len(answer) <= 3:
+        answer = answer + answer[-1] * (3-len(answer))
+    return answer
