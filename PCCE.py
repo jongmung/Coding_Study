@@ -949,12 +949,10 @@ def solution(new_id):
 
 # 삼각 달팽이
 def solution(n):
-
     triangle = [ [0] * n for _ in range(n) ]
     answer = []
     x, y = -1, 0
     num = 1
-
     for i in range(n):
         for j in range(i, n):
 			
