@@ -948,7 +948,10 @@ def solution(new_id):
     return answer
 
 # 삼각 달팽이
-# 
+# 정수 n이 매개변수로 주어집니다.
+# 다음 그림과 같이 밑변의 길이와 높이가 n인 삼각형에서 맨 위 꼭짓점부터 반시계 방향으로
+# 달팽이 채우기를 진행한 후, 첫 행부터 마지막 행까지
+# 모두 순서대로 합친 새로운 배열을 return 하도록 solution 함수를 완성해주세요.
 def solution(n):
     triangle = [ [0] * n for _ in range(n) ]
     answer = []
@@ -956,30 +959,29 @@ def solution(n):
     num = 1
     for i in range(n):
         for j in range(i, n):
-			
             # Down
             if i % 3 == 0:
                 x += 1
-			
             # Right
             elif i % 3 == 1:
                 y += 1
-			
             # Up
             elif i % 3 == 2:
                 x -= 1
                 y -= 1
-
             triangle[x][y] = num
             num += 1
-
     for i in range(n):
         for j in range(i+1):
             answer.append(triangle[i][j])
-
     return answer
     
 # 메뉴 리뉴얼
+# 레스토랑을 운영하던 스카피는 코로나19로 인한 불경기를 극복하고자 메뉴를 새로 구성하려고 고민하고 있습니다.
+# 기존에는 단품으로만 제공하던 메뉴를 조합해서 코스요리 형태로 재구성해서 새로운 메뉴를 제공하기로 결정했습니다.
+# 어떤 단품메뉴들을 조합해서 코스요리 메뉴로 구성하면 좋을 지 고민하던 "스카피"는 이전에 각 손님들이 주문할 때 가장 많이 함께 주문한 단품메뉴들을 코스요리 메뉴로 구성하기로 했습니다.
+# 단, 코스요리 메뉴는 최소 2가지 이상의 단품메뉴로 구성하려고 합니다.
+# 또한, 최소 2명 이상의 손님으로부터 주문된 단품메뉴 조합에 대해서만 코스요리 메뉴 후보에 포함하기로 했습니다.
 from itertools import combinations
 from collections import Counter
 def solution(orders, course):
