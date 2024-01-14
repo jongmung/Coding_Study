@@ -1158,6 +1158,13 @@ def solution(n, k, enemy):
     return answer
 
 # 숫자 카드 나누기
+# 철수와 영희는 선생님으로부터 숫자가 하나씩 적힌 카드들을 절반씩 나눠서 가진 후, 다음 두 조건 중 하나를 만족하는 가장 큰 양의 정수 a의 값을 구하려고 합니다.
+
+# 철수가 가진 카드들에 적힌 모든 숫자를 나눌 수 있고 영희가 가진 카드들에 적힌 모든 숫자들 중 하나도 나눌 수 없는 양의 정수 a
+# 영희가 가진 카드들에 적힌 모든 숫자를 나눌 수 있고, 철수가 가진 카드들에 적힌 모든 숫자들 중 하나도 나눌 수 없는 양의 정수 a
+# 예를 들어, 카드들에 10, 5, 20, 17이 적혀 있는 경우에 대해 생각해 봅시다. 만약, 철수가 [10, 17]이 적힌 카드를 갖고, 영희가 [5, 20]이 적힌 카드를 갖는다면 두 조건 중 하나를 만족하는 양의 정수 a는 존재하지 않습니다. 하지만, 철수가 [10, 20]이 적힌 카드를 갖고, 영희가 [5, 17]이 적힌 카드를 갖는다면, 철수가 가진 카드들의 숫자는 모두 10으로 나눌 수 있고, 영희가 가진 카드들의 숫자는 모두 10으로 나눌 수 없습니다. 따라서 철수와 영희는 각각 [10, 20]이 적힌 카드, [5, 17]이 적힌 카드로 나눠 가졌다면 조건에 해당하는 양의 정수 a는 10이 됩니다.
+
+# 철수가 가진 카드에 적힌 숫자들을 나타내는 정수 배열 arrayA와 영희가 가진 카드에 적힌 숫자들을 나타내는 정수 배열 arrayB가 주어졌을 때, 주어진 조건을 만족하는 가장 큰 양의 정수 a를 return하도록 solution 함수를 완성해 주세요. 만약, 조건을 만족하는 a가 없다면, 0을 return 해 주세요.
 def solution(arrayA, arrayB):
     answer = 0
     
@@ -1193,3 +1200,51 @@ def notDiv(array, gcd):
         if n % gcd == 0:
             return False
     return True
+
+# 광물캐기
+def solution(picks, minerals):
+    # 광물의 수가 (곡괭이의 수) x 5 보다 많다면,
+    # 채굴 가능한 총 광물의 개수를 자원 (곡괭이의 수) x 5로 제한한다.
+    if sum(picks) * 5 < len(minerals):
+        minerals = minerals[:sum(picks) * 5]
+
+    # 광물을 크기가 5인 청크로 분할하고 각 청크에 포함된 종류별 광물의 개수를 센다.
+    # 광물의 개수를 기준으로 내림차순으로 정렬한다.
+    counted = scan_minerals(minerals)
+
+    # 정렬 방법에 따라 곡괭이의 개수를 줄여가며 피로도를 계산한다.
+    answer = calculate_fatigue(counted, picks)
+    return answer
+
+def scan_minerals(minerals):
+    i = 0
+    counted = []
+    flag = True
+    while flag:
+        target = []
+        if i + 5 < len(minerals):
+            target = minerals[i:i + 5]
+        else:
+            target = minerals[i:]
+            flag = False
+        dias, irons, stones = target.count('diamond'), target.count('iron'), target.count('stone')
+        counted.append([dias, irons, stones])
+        i += 5
+    counted.sort(key=lambda _: (-_[0], -_[1]))
+    return counted
+
+def calculate_fatigue(counted, picks):
+    result = 0
+    for target in counted:
+        if picks[0] > 0:
+            picks[0] -= 1
+            result += sum(target)
+        elif picks[1] > 0:
+            picks[1] -= 1
+            result += target[0] * 5 + target[1] + target[2]
+        elif picks[2] > 0:
+            picks[2] -= 1
+            result += target[0] * 25 + target[1] * 5 + target[2]
+        else:
+            break
+    return result
