@@ -1371,3 +1371,46 @@ def solution(order):
                 break
         i += 1
     return answer
+
+# [1차] 뉴스 클러스터링
+# 자카드 유사도는 집합 간의 유사도를 검사하는 여러 방법 중의 하나로 알려져 있다.
+# 두 집합 A, B 사이의 자카드 유사도 J(A, B)는 두 집합의 교집합 크기를 두 집합의 합집합 크기로 나눈 값으로 정의된다.
+#   예를 들어 집합 A = {1, 2, 3}, 집합 B = {2, 3, 4}라고 할 때,
+#   교집합 A ∩ B = {2, 3}, 합집합 A ∪ B = {1, 2, 3, 4}이 되므로,
+#   집합 A, B 사이의 자카드 유사도 J(A, B) = 2/4 = 0.5가 된다.
+#   집합 A와 집합 B가 모두 공집합일 경우에는 나눗셈이 정의되지 않으니 따로 J(A, B) = 1로 정의한다.
+#   자카드 유사도는 원소의 중복을 허용하는 다중집합에 대해서 확장할 수 있다. 다중집합 A는 원소 "1"을 3개 가지고 있고,
+#   다중집합 B는 원소 "1"을 5개 가지고 있다고 하자.
+#   이 다중집합의 교집합 A ∩ B는 원소 "1"을 min(3, 5)인 3개, 합집합 A ∪ B는 원소 "1"을 max(3, 5)인 5개 가지게 된다.
+#   다중집합 A = {1, 1, 2, 2, 3}, 다중집합 B = {1, 2, 2, 4, 5}라고 하면,
+#   교집합 A ∩ B = {1, 2, 2}, 합집합 A ∪ B = {1, 1, 2, 2, 3, 4, 5}가 되므로,
+#   자카드 유사도 J(A, B) = 3/7, 약 0.42가 된다.
+# 입력으로 들어온 두 문자열의 자카드 유사도를 출력한다.
+# 유사도 값은 0에서 1 사이의 실수이므로,
+# 이를 다루기 쉽도록 65536을 곱한 후에 소수점 아래를 버리고 정수부만 출력한다.
+from collections import Counter
+
+def solution(str1, str2):
+    str1_low = str1.lower()
+    str2_low = str2.lower()
+    
+    str1_lst = []
+    str2_lst = []
+    
+    for i in range(len(str1_low)-1):
+        if str1_low[i].isalpha() and str1_low[i+1].isalpha():
+            str1_lst.append(str1_low[i] + str1_low[i+1])
+    for j in range(len(str2_low)-1):
+        if str2_low[j].isalpha() and str2_low[j+1].isalpha():
+            str2_lst.append(str2_low[j] + str2_low[j+1])
+            
+    Counter1 = Counter(str1_lst)
+    Counter2 = Counter(str2_lst)
+    
+    inter = list((Counter1 & Counter2).elements())
+    union = list((Counter1 | Counter2).elements())
+    
+    if len(union) == 0 and len(inter) == 0:
+        return 65536
+    else:
+        return int(len(inter) / len(union) * 65536)
