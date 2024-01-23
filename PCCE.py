@@ -1511,3 +1511,33 @@ def solution(dirs):
             y = ny
             x = nx
     return len(sets) // 2
+
+# 오픈채팅방
+# 신입사원인 김크루는 카카오톡 오픈 채팅방을 개설한 사람을 위해, 다양한 사람들이 들어오고,
+# 나가는 것을 지켜볼 수 있는 관리자창을 만들기로 했다. 채팅방에 누군가 들어오면 다음 메시지가 출력된다.
+#   "[닉네임]님이 들어왔습니다."
+# 채팅방에서 누군가 나가면 다음 메시지가 출력된다.
+#   "[닉네임]님이 나갔습니다."
+# 채팅방에서 닉네임을 변경하는 방법은 다음과 같이 두 가지이다.
+#   채팅방을 나간 후, 새로운 닉네임으로 다시 들어간다.
+#   채팅방에서 닉네임을 변경한다.
+# 닉네임을 변경할 때는 기존에 채팅방에 출력되어 있던 메시지의 닉네임도 전부 변경된다.
+# 채팅방에 들어오고 나가거나, 닉네임을 변경한 기록이 담긴 문자열 배열 record가 매개변수로 주어질 때, 모든 기록이 처리된 후,
+# 최종적으로 방을 개설한 사람이 보게 되는 메시지를 문자열 배열 형태로 return 하도록 solution 함수를 완성하라.
+def solution(record):
+    answer = []
+    dic = {}
+    
+    for sentence in record:
+        sentence_split = sentence.split()
+        if len(sentence_split) == 3:
+            dic[sentence_split[1]] = sentence_split[2]
+            
+    for sentence in record:
+        sentence_split = sentence.split()
+        if sentence_split[0] == 'Enter':
+            answer.append('%s님이 들어왔습니다.' %dic[sentence_split[1]])
+        elif sentence_split[0] == 'Leave':
+            answer.append('%s님이 나갔습니다.' %dic[sentence_split[1]])
+            
+    return(answer)
