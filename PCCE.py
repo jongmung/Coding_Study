@@ -1823,3 +1823,61 @@ def solution(places):
             answer.append(1)
     #끝!
     return answer
+
+# 리코쳇 로봇
+# 이 보드게임은 격자모양 게임판 위에서 말을 움직이는 게임으로,
+# 시작 위치에서 목표 위치까지 최소 몇 번만에 도달할 수 있는지 말하는 게임입니다.
+# 이 게임에서 말의 움직임은 상, 하, 좌, 우 4방향 중 하나를 선택해서
+# 게임판 위의 장애물이나 맨 끝에 부딪힐 때까지 미끄러져 이동하는 것을 한 번의 이동으로 칩니다.
+# 게임판의 상태를 나타내는 문자열 배열 board가 주어졌을 때,
+# 말이 목표위치에 도달하는데 최소 몇 번 이동해야 하는지 return 하는 solution함수를 완성하세요.
+# 만약 목표위치에 도달할 수 없다면 -1을 return 해주세요.
+from collections import deque
+
+dx = [-1, 1, 0, 0]
+dy = [0, 0, -1, 1]
+
+N, M = 0, 0
+
+def init(board) :
+    global N, M
+    N, M = len(board), len(board[0])
+    for i in range(N) :
+        for j in range(M) :
+            if board[i][j] == 'R' :
+                start = (j, i)
+            if board[i][j] == 'G' :
+                end = (j, i)
+                
+    return start, end
+
+def move(board, x, y, k) :
+    while -1 < x < M and -1 < y < N and board[y][x] != 'D':
+        x, y = x + dx[k], y + dy[k]
+    
+    return x - dx[k], y - dy[k]
+
+def bfs(board, start, end) :
+    x, y = start
+    q = deque([(x, y, 0)])
+    visited = [[float('inf')]*M for _ in range(N)]
+    visited[y][x] = 0
+    
+    while q :
+        x, y, dist = q.popleft()
+        if (x, y) == end :
+            return dist
+        
+        for k in range(4) :
+            ax, ay = move(board, x, y, k)
+            if visited[ay][ax] > dist + 1 :
+                visited[ay][ax] = dist + 1
+                q.append((ax, ay, dist+1))
+
+    return -1
+    
+def solution(board):
+    start, end = init(board)
+    result = bfs(board, start, end)
+
+    return result
