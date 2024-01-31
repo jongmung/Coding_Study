@@ -1890,7 +1890,7 @@ def solution(board):
 # 위에 설명한 방법으로 1개 이상 단위로 문자열을 잘라 압축하여
 # 표현한 문자열 중 가장 짧은 것의 길이를 return 하도록 solution 함수를 완성해주세요.
 def solution(s):
-    result=[]
+    result=[] 
     if len(s)==1:
         return 1
     for i in range(1, len(s)+1):
@@ -1911,3 +1911,35 @@ def solution(s):
                 cnt = 1
         result.append(len(b))
     return min(result)
+
+# 우박수열 정적분
+# 콜라츠 추측이란 로타르 콜라츠(Lothar Collatz)가 1937년에 제기한 추측으로 
+# 모든 자연수 k에 대해 다음 작업을 반복하면 항상 1로 만들 수 있다는 추측입니다.
+#   1-1. 입력된 수가 짝수라면 2로 나눕니다.
+#   1-2. 입력된 수가 홀수라면 3을 곱하고 1을 더합니다.
+#   2.결과로 나온 수가 1보다 크다면 1번 작업을 반복합니다.
+# x에 대한 어떤 범위 [a, b]가 주어진다면 이 범위에 대한 정적분 결과는 꺾은선 그래프와
+# x = a, x = b, y = 0 으로 둘러 쌓인 공간의 면적과 같습니다.
+# 은지는 이것을 우박수열 정적분이라고 정의하였고 다양한 구간에 대해서 우박수열 정적분을 해보려고 합니다.
+# 0 이상의 수 b에 대해 [a, -b]에 대한 정적분 결과는 x = a, x = n - b, y = 0 으로 둘러 쌓인 공간의 면적으로 정의하며,
+# 이때 n은 k가 초항인 우박수열이 1이 될때 까지의 횟수를 의미합니다.
+# 우박수의 초항 k와, 정적분을 구하는 구간들의 목록 ranges가 주어졌을 때 정적분의 결과 목록을 return 하도록 solution을 완성해주세요.
+# 단, 주어진 구간의 시작점이 끝점보다 커서 유효하지 않은 구간이 주어질 수 있으며 이때의 정적분 결과는 -1로 정의합니다.
+def solution(k, ranges):
+    answer = []
+    integralArea = [0.0]
+    while k != 1:
+        # 우박 수열
+        newK = (k//2) if k % 2 == 0 else (k*3+1)
+        # 정적분 넓이
+        minY, maxY = min(k, newK), max(k, newK)
+        integralArea.append(integralArea[-1] + (minY + (1/2) * (maxY - minY)))
+        # 자연수 k 갱신
+        k = newK
+    N = len(integralArea) # 그래프 길이
+    for y1, y2 in ranges:
+        # 정적분이 유효한 구간
+        if N + (y2-1) >= y1: answer.append(integralArea[y2-1] - integralArea[y1])
+        # 시작점이 끝점보다 커서 유효하지 않은 구간
+        else: answer.append(-1)
+    return answer
