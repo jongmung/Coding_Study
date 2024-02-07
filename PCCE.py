@@ -2137,6 +2137,10 @@ def solution(id_list, report,k):
     return answer
 
 # 당구연습
+# 당구대의 가로 길이 m, 세로 길이 n과 머쓱이가 쳐야 하는 공이 놓인 위치 좌표를 나타내는 두 정수 startX, startY,
+# 그리고 매 회마다 목표로 해야하는 공들의 위치 좌표를 나타내는 정수 쌍들이 들어있는 2차원 정수배열 balls가 주어집니다.
+# "원쿠션" 연습을 위해 머쓱이가 공을 적어도 벽에 한 번은 맞춘 후 목표 공에 맞힌다고 할 때,
+# 각 회마다 머쓱이가 친 공이 굴러간 거리의 최솟값의 제곱을 배열에 담아 return 하도록 solution 함수를 완성해 주세요.
 def solve(x, y, startX, startY, ballX, ballY):
     dists = []
     # 위쪽 벽
@@ -2167,3 +2171,25 @@ def solution(m, n, startX, startY, balls):
     for ballX, ballY in balls:
         answer.append(solve(m, n, startX, startY, ballX, ballY))
     return answer
+
+# 유사 칸토어 비트열
+# 수학에서 칸토어 집합은 0과 1 사이의 실수로 이루어진 집합으로,
+# [0, 1]부터 시작하여 각 구간을 3등분하여 가운데 구간을 반복적으로 제외하는 방식으로 만들어집니다.
+# 남아는 칸토어 집합을 조금 변형하여 유사 칸토어 비트열을 만들었습니다. 유사 칸토어 비트열은 다음과 같이 정의됩니다.
+#   0 번째 유사 칸토어 비트열은 "1" 입니다.
+#   n(1 ≤ n) 번째 유사 칸토어 비트열은 n - 1 번째 유사 칸토어 비트열에서의 1을 11011로 치환하고 0을 00000로 치환하여 만듭니다.
+# 남아는 n 번째 유사 칸토어 비트열에서 특정 구간 내의 1의 개수가 몇 개인지 궁금해졌습니다.
+# n과 1의 개수가 몇 개인지 알고 싶은 구간을 나타내는 l, r이 주어졌을 때 그 구간 내의 1의 개수를 return 하도록 solution 함수를 완성해주세요.
+def solution(n, l, r):
+    answer = 0
+    for l in range(l-1, r):
+        if is_one(l):
+            answer += 1
+    return answer
+def is_one(l):
+    while l >= 5:
+        if (l - 2) % 5 == 0:
+            return False
+        l //= 5
+
+    return l != 2
