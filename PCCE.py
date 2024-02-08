@@ -2193,3 +2193,41 @@ def is_one(l):
         l //= 5
 
     return l != 2
+
+# 빛의 경로 사이클
+dx = [-1, 0, 1, 0]
+dy = [0, 1, 0, -1]
+def move(x, y, dir, pos) :
+    if pos == 'L' : # 좌로 가는데 L을 만나면 하, 우로 가는데 L을 만나면 상
+        dir = (dir - 1) % 4
+    elif pos == 'R' :
+        dir = (dir + 1) % 4
+
+    nx = (x + dx[dir]) % row
+    ny = (y + dy[dir]) % col
+
+    return nx, ny, dir
+
+def solution(grid) :
+    answer = []
+    global row, col
+    row = len(grid)
+    col = len(grid[0])
+    visited = [[[False] * 4 for _ in range(col)] for _ in range(row)]
+
+    for i in range(row) :
+        for j in range(col) :
+            for k in range(4) : # 네 방향에 대하여 확인
+                if not visited[i][j][k] :
+                    route = 0
+                    x, y, dir = i, j, k
+
+                    while not visited[x][y][dir] :
+                        route += 1
+                        visited[x][y][dir] = True
+                        x, y, dir = move(x, y, dir, grid[x][y])
+
+                    answer.append(route)
+
+    answer.sort()
+    return answer
