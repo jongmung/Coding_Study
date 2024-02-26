@@ -242,3 +242,49 @@ def solution(n, works):
     answer = [ w**2 for w in works ]
     
     return sum(answer)
+
+# 수식 최대화
+# 해커톤 대회에 참가하는 모든 참가자들에게는 숫자들과 3가지의 연산문자(+, -, *) 만으로 이루어진 연산 수식이 전달되며,
+# 참가자의 미션은 전달받은 수식에 포함된 연산자의 우선순위를 자유롭게 재정의하여 만들 수 있는 가장 큰 숫자를 제출하는 것입니다.
+# 단, 연산자의 우선순위를 새로 정의할 때, 같은 순위의 연산자는 없어야 합니다.
+# 즉, + > - > * 또는 - > * > + 등과 같이 연산자 우선순위를 정의할 수 있으나
+# +,* > - 또는 * > +,-처럼 2개 이상의 연산자가 동일한 순위를 가지도록 연산자 우선순위를 정의할 수는 없습니다.
+# 수식에 포함된 연산자가 2개라면 정의할 수 있는 연산자 우선순위 조합은 2! = 2가지이며, 연산자가 3개라면 3! = 6가지 조합이 가능합니다.
+# 참가자에게 주어진 연산 수식이 담긴 문자열 expression이 매개변수로 주어질 때,
+# 우승 시 받을 수 있는 가장 큰 상금 금액을 return 하도록 solution 함수를 완성해주세요.
+from re import split
+from itertools import permutations
+
+def solution(expression):
+    # 연산자 우선 순위가 6종류밖에 안 되고, expression 길이도 짧습니다.
+    # brute-force로 해결합니다.
+    values = []
+    
+    for priority in permutations(['*', '+', '-'], 3):
+        # 우선 연산자와 피연산자를 저장해두고,
+        operands = list(map(int, split('[\*\+\-]', expression)))
+        operators = [c for c in expression if c in '*+-']
+        
+        # 우선순위대로 연산을 수행합니다.
+        for op in priority:
+            
+            while op in operators:
+                # i번째 연산자는 i번째 피연산자와 i+1번째 피연산자에 대한 연산을 수행합니다.
+                i = operators.index(op)
+                
+                if op == '*':
+                    v = operands[i] * operands[i+1]
+                elif op == '+':
+                    v = operands[i] + operands[i+1]
+                else:
+                    v = operands[i] - operands[i+1]
+                
+                # 피연산자 리스트를 업데이트 합니다.
+                operands[i] = v
+                operands.pop(i+1)
+                # 연산자 리스트를 업데이트 합니다.
+                operators.pop(i)
+        
+        values.append(operands[0])
+        
+    return max(abs(v) for v in values)
