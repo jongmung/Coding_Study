@@ -395,3 +395,19 @@ def solution(n, costs):
                 break
                 
     return answer
+
+# 가장 긴 팰린드롬
+# 앞뒤를 뒤집어도 똑같은 문자열을 팰린드롬(palindrome)이라고 합니다.
+# 문자열 s가 주어질 때, s의 부분문자열(Substring)중 가장 긴 팰린드롬의 길이를 return 하는 solution 함수를 완성해 주세요.
+# 예를들면, 문자열 s가 "abcdcba"이면 7을 return하고 "abacde"이면 3을 return합니다.
+def isPalindrome(x):
+    if x==x[::-1]:
+        return True
+def solution(s):
+    MAX=0
+    for i in range(len(s)):
+        for j in range(i+1,len(s)+1):
+            if isPalindrome(s[i:j]):
+                if MAX<len(s[i:j]):
+                    MAX=len(s[i:j])
+    return MAX
