@@ -635,3 +635,31 @@ def solution(a):
     # --------------------------------
             
     return answer
+
+# 110 옮기기
+# 0과 1로 이루어진 어떤 문자열 x에 대해서, 당신은 다음과 같은 행동을 통해 x를 최대한 사전 순으로 앞에 오도록 만들고자 합니다.
+#   x에 있는 "110"을 뽑아서, 임의의 위치에 다시 삽입합니다.
+#   예를 들어, x = "11100" 일 때, 여기서 중앙에 있는 "110"을 뽑으면 x = "10" 이 됩니다.
+#   뽑았던 "110"을 x의 맨 앞에 다시 삽입하면 x = "11010" 이 됩니다.
+# 변형시킬 문자열 x가 여러 개 들어있는 문자열 배열 s가 주어졌을 때,
+# 각 문자열에 대해서 위의 행동으로 변형해서 만들 수 있는 문자열 중 사전 순으로 가장 앞에 오는 문자열을 배열에 담아 return 하도록 solution 함수를 완성해주세요.
+def solution(s):
+    answer = []
+    for string in s:
+        count, idx, stack = 0, 0, ""
+        while idx < len(string):            # 110 찾기
+            if string[idx] == "0" and stack[-2:] == "11":
+                stack = stack[:-2]
+                count += 1
+            else:
+                stack += string[idx]
+            idx += 1
+
+        idx = stack.find("111")             # 110이 빠진 string에서 111 찾기
+        if idx == -1:                       # 0뒤에 110 반복해 붙이기
+            idx = stack.rfind('0')
+            stack = stack[:idx+1]+"110"*count+stack[idx+1:]
+        else:                               # 111앞에 110 반복해 붙이기
+            stack = stack[:idx]+"110"*count+stack[idx:]
+        answer.append(stack)
+    return answer
