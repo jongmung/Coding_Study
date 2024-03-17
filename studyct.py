@@ -838,3 +838,32 @@ def solution(n, cores):
                 n -= 1
                 if n == 0:
                     return i + 1
+                
+# 억억단을 외우자
+# 억억단은 1억 x 1억 크기의 행렬입니다. 억억단을 외우던 영우는 친구 수연에게 퀴즈를 내달라고 부탁하였습니다.
+# 수연은 평범하게 문제를 내봐야 영우가 너무 쉽게 맞히기 때문에 좀 어렵게 퀴즈를 내보려고 합니다.
+# 적당한 수 e를 먼저 정하여 알려주고 e 이하의 임의의 수 s를 여러 개 얘기합니다.
+# 영우는 각 s에 대해서 s보다 크거나 같고 e 보다 작거나 같은 수 중에서 억억단에서 가장 많이 등장한 수를 답해야 합니다.
+# 만약 가장 많이 등장한 수가 여러 개라면 그 중 가장 작은 수를 답해야 합니다.
+# 수연은 영우가 정답을 말하는지 확인하기 위해 당신에게 프로그램 제작을 의뢰하였습니다.
+# e와 s의 목록 starts가 매개변수로 주어질 때 각 퀴즈의 답 목록을 return 하도록 solution 함수를 완성해주세요.
+def solution(e, starts):
+    numbers = [0 for i in range(e+1)]
+    numbers[1] = 1
+    # 약수 개수 찾기
+    for num in range(2, e+1):
+        for i in range(1, int(num**0.5)+1):
+            if num % i == 0:
+                numbers[num] += 2
+        
+        if num**0.5 == int(num**0.5) :
+            numbers[num] -= 1
+
+    # 가장 큰 수 정렬하기
+    big_numbers = [i for i in range(e+1)]
+    for i in reversed(range(1, e)):
+        if numbers[i] < numbers[big_numbers[i+1]]:
+            big_numbers[i] = big_numbers[i+1]
+
+    # 정답 찾기
+    return [ big_numbers[s] for s in starts]
