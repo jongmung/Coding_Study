@@ -867,3 +867,50 @@ def solution(e, starts):
 
     # 정답 찾기
     return [ big_numbers[s] for s in starts]
+
+# 2차원 동전 뒤집기
+# 한수는 직사각형 모양의 공간에 놓인 동전들을 뒤집는 놀이를 하고 있습니다.
+# 모든 동전들은 앞과 뒤가 구분되어 있으며, 동전을 뒤집기 위해서는 같은 줄에 있는 모든 동전을 뒤집어야 합니다.
+# 동전들의 초기 상태와 목표 상태가 주어졌을 때, 초기 상태에서 최소 몇 번의 동전을 뒤집어야 목표 상태가 되는지 알아봅시다.
+# 직사각형 모양의 공간에 놓인 동전들의 초기 상태를 나타내는 2차원 정수 배열 beginning,
+# 목표 상태를 나타내는 target이 주어졌을 때, 초기 상태에서 목표 상태로 만들기 위해
+# 필요한 동전 뒤집기 횟수의 최솟값을 return 하는 solution 함수를 완성하세요.
+# 단, 목표 상태를 만들지 못하는 경우에는 -1을 return 합니다.
+# 행 뒤집기
+def flip(ary, bits, row):
+    row_cnt = 0
+    for i in range(row):
+        if bits & (1 << i): # i번째 행을 뒤집어야 하는 경우
+            ary[i] = [1-e for e in ary[i]]
+            row_cnt += 1
+    return ary, row_cnt
+       
+# 열 확인하기
+def check(ary, col):
+    col_cnt = 0
+    for j in range(col):
+        tmp = set([row[j] for row in ary])  # j열
+        if len(tmp) == 2:   # 목표 상태 도달 불가능
+            return -1
+        elif 1 in tmp :     # 뒤집어야 하는 경우
+            col_cnt += 1
+    return col_cnt
+    
+def solution(beginning, target):
+    answer = float('inf')
+    row, col = len(beginning), len(beginning[0])
+    board = [[1 if beginning[i][j] != target[i][j] else 0 for j in range(col)] for i in range(row)]
+    
+    # 0...0 : 모든 행을 뒤집지 않는다
+    # 1...1 : 모든 행을 뒤집는다
+    for bits in range(2**row):
+        flipped, row_cnt = flip(board[:], bits, row) # 뒤집어야 할 행만큼 행 뒤집기
+        col_cnt = check(flipped, col)   # 열 확인하기
+        if col_cnt == -1 :              # 목표 상태로 도달 불가능
+            continue
+    
+        answer = min(row_cnt+col_cnt, answer)
+    
+    if answer == float('inf'):
+        return -1
+    return answer
