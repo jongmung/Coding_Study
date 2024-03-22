@@ -1059,3 +1059,50 @@ def solution(edges):
     edge_counts = count_edges(edges)
     answer = check_answer(edge_counts)
     return answer
+
+# 양과 늑대
+# 2진 트리 모양 초원의 각 노드에 늑대와 양이 한 마리씩 놓여 있습니다.
+# 이 초원의 루트 노드에서 출발하여 각 노드를 돌아다니며 양을 모으려 합니다. 
+# 각 노드를 방문할 때 마다 해당 노드에 있던 양과 늑대가 당신을 따라오게 됩니다. 
+# 이때, 늑대는 양을 잡아먹을 기회를 노리고 있으며,
+# 당신이 모은 양의 수보다 늑대의 수가 같거나 더 많아지면 바로 모든 양을 잡아먹어 버립니다. 
+# 당신은 중간에 양이 늑대에게 잡아먹히지 않도록 하면서 최대한 많은 수의 양을 모아서 다시 루트 노드로 돌아오려 합니다.
+# 각 노드에 있는 양 또는 늑대에 대한 정보가 담긴 배열 info,
+# 2진 트리의 각 노드들의 연결 관계를 담은 2차원 배열 edges가 매개변수로 주어질 때,
+# 문제에 제시된 조건에 따라 각 노드를 방문하면서 모을 수 있는 양은 최대 몇 마리인지 return 하도록 solution 함수를 완성해주세요.
+def solution(info, edges):
+    def nextNodes(v):
+        temp = list()
+        for e in edges:
+            # i는 부모노드, j는 자식노드
+            i, j = e
+            # 부모노드 번호 비교
+            if v == i:
+                temp.append(j)
+        return temp
+
+    def dfs(sheep, wolf, current, path):
+        # 지금 노드 확인, 양 늑대 판별
+        if info[current]:
+            wolf += 1
+        else:
+            sheep += 1
+
+        # 늑대가 다 잡아먹음, 무시
+        if sheep <= wolf:
+            return 0
+
+        # 아니라면 임시 변수에 값 갱신
+        maxSheep = sheep
+
+        # 서칭 시작
+        for p in path:
+            for n in nextNodes(p):
+                if n not in path:
+                    path.append(n)
+                    # 최대 양 판별
+                    maxSheep = max(maxSheep, dfs(sheep, wolf, n, path))
+                    path.pop()
+        return maxSheep
+    answer = dfs(0, 0, 0, [0])
+    return answer
