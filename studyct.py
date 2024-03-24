@@ -1106,3 +1106,31 @@ def solution(info, edges):
         return maxSheep
     answer = dfs(0, 0, 0, [0])
     return answer
+
+# 디스크 컨트롤러
+# 하드디스크는 한 번에 하나의 작업만 수행할 수 있습니다.
+# 디스크 컨트롤러를 구현하는 방법은 여러 가지가 있습니다. 가장 일반적인 방법은 요청이 들어온 순서대로 처리하는 것입니다.
+# 각 작업에 대해 [작업이 요청되는 시점, 작업의 소요시간]을 담은 2차원 배열 jobs가 매개변수로 주어질 때,
+# 작업의 요청부터 종료까지 걸린 시간의 평균을 가장 줄이는 방법으로 처리하면
+# 평균이 얼마가 되는지 return 하도록 solution 함수를 작성해주세요. (단, 소수점 이하의 수는 버립니다)
+from heapq import heappush, heappop
+def solution(jobs):
+    jobs.sort()
+    num = len(jobs)
+    waiting = [] # (소요시간, 요청시점)
+    count = [] # 각 작업이 몇초 걸렸는지
+    now = 0 #현재 시각
+    while len(count) != num : 
+        while jobs and now >= jobs[0][0] : 
+            top = jobs.pop(0)
+            heappush(waiting, (top[1], top[0]))
+
+        if jobs and waiting == []:
+            top = jobs.pop(0)
+            now = top[0]
+            heappush(waiting, (top[1], top[0]))
+        x,y = heappop(waiting)
+        now += x 
+        count.append(now-y)
+
+    return sum(count)//num
