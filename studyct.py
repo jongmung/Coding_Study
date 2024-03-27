@@ -1249,3 +1249,26 @@ def solution(key, lock):
                         new_lock[i + x][j + y] -= r_key[x][y]
 
     return False
+
+# 스티커 모으기(2)
+# 원형으로 연결된 스티커에서 몇 장의 스티커를 뜯어내어 뜯어낸 스티커에 적힌 숫자의 합이 최대가 되도록 하고 싶습니다.
+# 단 스티커 한 장을 뜯어내면 양쪽으로 인접해있는 스티커는 찢어져서 사용할 수 없게 됩니다.
+# 스티커에 적힌 숫자가 배열 형태로 주어질 때, 스티커를 뜯어내어 얻을 수 있는 숫자의 합의 최댓값을 return 하는 solution 함수를 완성해 주세요.
+# 원형의 스티커 모양을 위해 배열의 첫 번째 원소와 마지막 원소가 서로 연결되어 있다고 간주합니다.
+def solution(sticker):
+    answer = 0
+    if len(sticker) == 1:
+        return sticker.pop()
+    size = len(sticker)
+    # 1번 선택하는 경우 -> 1..n-1번 배열에 대한 DP
+    dp1 = [0] + sticker[:-1]
+    for i in range(2, size):
+        dp1[i] = max(dp1[i-1], dp1[i-2] + dp1[i])
+    
+    # 2번 선택하는 경우 -> 2...n번 배열에 대한 DP
+    dp2 = [0] + sticker[1:]
+    for i in range(2, size):
+        dp2[i] = max(dp2[i-1], dp2[i-2] + dp2[i])
+        
+    answer = max(dp1[-1], dp2[-1])
+    return answer
