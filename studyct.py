@@ -1310,3 +1310,49 @@ def solution(gems):
                 gem_dict[gems[right]] = 1
     
     return [answer[0]+1, answer[1]+1] # 시작 인덱스가 1번 진열대 부터 라서 1 증가
+
+# 합승 택시 요금
+# 지점의 개수 n, 출발지점을 나타내는 s, A의 도착지점을 나타내는 a, B의 도착지점을 나타내는 b,
+# 지점 사이의 예상 택시요금을 나타내는 fares가 매개변수로 주어집니다.
+# 이때, A, B 두 사람이 s에서 출발해서 각각의 도착 지점까지 택시를 타고 간다고 가정할 때,
+# 최저 예상 택시요금을 계산해서 return 하도록 solution 함수를 완성해 주세요.
+# 만약, 아예 합승을 하지 않고 각자 이동하는 경우의 예상 택시요금이 더 낮다면, 합승을 하지 않아도 됩니다.
+import heapq
+def solution(n, s, a, b, fares):
+    INF = 10000000
+    answer = INF
+    graph = [[] * (n + 1) for _ in range(n + 1)]
+
+    for f in fares:
+        node1, node2, fee = f
+        # node1 - > node2 가는 요금이 fee
+        graph[node1].append((node2, fee))
+        # node2 - > node1 가는 요금이 fee
+        graph[node2].append((node1, fee))
+
+    def dijkstra(s):
+        q = []
+        # 최단거리 테이블을 무한으로 초기화
+        distance = [INF] * (n + 1)
+        # 거리(금액), 노드번호 순서
+        heapq.heappush(q, (0, s))
+        # 시작노드로 가는 최단거리는 0
+        distance[s] = 0
+        while q:
+            dist, now = heapq.heappop(q)
+            # 현재 노드가 이미 처리된 노드면 무시
+            if distance[now] < dist:
+                continue
+            for g in graph[now]:
+                cost = dist + g[1]
+                if cost < distance[g[0]]:
+                    distance[g[0]] = cost
+                    heapq.heappush(q, (cost, g[0]))
+        return distance
+
+    distance_list = [[]] + [dijkstra(i) for i in range(1, n + 1)]
+
+    for i in range(1, n + 1):
+        answer = min(distance_list[s][i] + distance_list[i][a] + distance_list[i][b], answer)
+
+    return answer
