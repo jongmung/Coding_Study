@@ -1382,3 +1382,45 @@ def solution(N, number):
         else: # N을 8번 사용했는데도 찾고자하는 값 number가 존재하지 않는다면 -1 return
             answer = -1
     return answer
+
+# 경주로 건설
+# 제공된 경주로 설계 도면에 따르면 경주로 부지는 N x N 크기의 정사각형 격자 형태이며 각 격자는 1 x 1 크기입니다.
+# 설계 도면에는 각 격자의 칸은 0 또는 1 로 채워져 있으며, 0은 칸이 비어 있음을 1은 해당 칸이 벽으로 채워져 있음을 나타냅니다.
+# 경주로의 출발점은 (0, 0) 칸(좌측 상단)이며, 도착점은 (N-1, N-1) 칸(우측 하단)입니다.
+# 죠르디는 출발점인 (0, 0) 칸에서 출발한 자동차가 도착점인 (N-1, N-1) 칸까지 무사히 도달할 수 있게 중간에 끊기지 않도록 경주로를 건설해야 합니다.
+# 경주로는 상, 하, 좌, 우로 인접한 두 빈 칸을 연결하여 건설할 수 있으며, 벽이 있는 칸에는 경주로를 건설할 수 없습니다.
+# 이때, 인접한 두 빈 칸을 상하 또는 좌우로 연결한 경주로를 직선 도로 라고 합니다.
+# 또한 두 직선 도로가 서로 직각으로 만나는 지점을 코너 라고 부릅니다.
+# 건설 비용을 계산해 보니 직선 도로 하나를 만들 때는 100원이 소요되며, 코너를 하나 만들 때는 500원이 추가로 듭니다.
+# 죠르디는 견적서 작성을 위해 경주로를 건설하는 데 필요한 최소 비용을 계산해야 합니다.
+# 도면의 상태(0은 비어 있음, 1은 벽)을 나타내는 2차원 배열 board가 매개변수로 주어질 때,
+# 경주로를 건설하는데 필요한 최소 비용을 return 하도록 solution 함수를 완성해주세요.
+from collections import deque
+def solution(board):
+    def bfs(start):
+        direc = {0:[-1, 0], 1:[0, 1], 2:[1, 0], 3:[0, -1]} # 북,동,남,서 순서
+        length = len(board)
+        visited = [[987654321]*length for _ in range(length)]
+        visited[0][0] = 0
+
+        q = deque([start]) # x, y, cost, dir
+        while q:
+            x, y, cost, d = q.popleft()
+            for i in range(4): # 북,동,남,서 순서
+                nx = x + direc[i][0]
+                ny = y + direc[i][1]
+
+                # board 안에 있고, 벽이 아닌지 확인
+                if 0 <= nx < length and 0 <= ny < length and board[nx][ny] == 0:
+                    
+                    # 비용계산
+                    if i == d : ncost = cost + 100
+                    else : ncost =  cost + 600
+                    # 최소 비용이면 갱신 후 endeque!
+                    if ncost < visited[nx][ny]:
+                        visited[nx][ny] = ncost
+                        q.append([nx, ny, ncost, i])
+                        
+        return visited[-1][-1]
+    
+    return min([bfs((0, 0, 0, 1)), bfs((0, 0, 0, 2))])
