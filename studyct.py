@@ -1424,3 +1424,87 @@ def solution(board):
         return visited[-1][-1]
     
     return min([bfs((0, 0, 0, 1)), bfs((0, 0, 0, 2))])
+
+# 기둥과 보 설치
+# 프로그램은 2차원 가상 벽면에 기둥과 보를 이용한 구조물을 설치할 수 있는데, 기둥과 보는 길이가 1인 선분으로 표현되며 다음과 같은 규칙을 가지고 있습니다.
+#   기둥은 바닥 위에 있거나 보의 한쪽 끝 부분 위에 있거나, 또는 다른 기둥 위에 있어야 합니다.
+#   보는 한쪽 끝 부분이 기둥 위에 있거나, 또는 양쪽 끝 부분이 다른 보와 동시에 연결되어 있어야 합니다.
+#   단, 바닥은 벽면의 맨 아래 지면을 말합니다.
+# 2차원 벽면은 n x n 크기 정사각 격자 형태이며, 각 격자는 1 x 1 크기입니다. 맨 처음 벽면은 비어있는 상태입니다.
+# 기둥과 보는 격자선의 교차점에 걸치지 않고, 격자 칸의 각 변에 정확히 일치하도록 설치할 수 있습니다.
+# 벽면의 크기 n, 기둥과 보를 설치하거나 삭제하는 작업이 순서대로 담긴 2차원 배열 build_frame이 매개변수로 주어질 때,
+# 모든 명령어를 수행한 후 구조물의 상태를 return 하도록 solution 함수를 완성해주세요.
+def solution(n, build_frame):
+    bow = [[0 for _ in range(n+1)] for _ in range(n)]
+    gidung = [[0 for _ in range(n)] for _ in range(n+1)]
+
+    def check_gidung(x, y):
+        # 바닥 위 or 보의 한쪽 끝 or 또 다른 기둥 위
+        return y == 0 or gidung[x][y-1] or (x < n and bow[x][y]) or (x > 0 and bow[x-1][y])
+
+    def check_bow(x, y):
+        # 한쪽 끝이 기둥 위 or 양쪽 끝이 보와 연결
+        return gidung[x][y-1] or gidung[x+1][y-1] or (1 <= x < n-1 and bow[x-1][y] and bow[x+1][y])
+
+    for x, y, a, b in build_frame:
+        # 기둥
+        if a == 0:
+            # 기둥 설치
+            if b == 1:
+                # 설치 가능 조건인가
+                if check_gidung(x, y):
+                    gidung[x][y] = 1
+            # 기둥 삭제
+            else:
+                # 일단 삭제
+                gidung[x][y] = 0
+                # 기둥 삭제 후 문제가 생기면 되돌리기
+                
+                # 연결된 기둥 확인
+                    # 윗기둥만
+                if y < n-1 and gidung[x][y+1] and not check_gidung(x, y+1):
+                    gidung[x][y] = 1
+                # 연결된 보 확인
+                    # 위로 연결된 보만
+                elif x < n and bow[x][y+1] and not check_bow(x, y+1):
+                    gidung[x][y] = 1
+                elif x-1>=0 and bow[x-1][y+1] and not check_bow(x-1, y+1):
+                    gidung[x][y] = 1
+            
+                
+        # 보
+        else:
+            # 보 설치
+            if b == 1:
+                # 보 설치 가능 조건인가?
+                if check_bow(x, y):
+                    bow[x][y] = 1
+            # 보 삭제
+            else:
+                # 일단 삭제
+                bow[x][y] = 0
+                # 보 삭제 후 문제가 생기면 되돌리기
+                
+                # 연결된 보 확인
+                if x > 0 and bow[x-1][y] and not check_bow(x-1, y):
+                    bow[x][y] = 1
+                elif x + 1 < n and bow[x+1][y] and not check_bow(x+1, y):
+                    bow[x][y] = 1
+                
+                # 연결된 기둥 확인
+                elif y < n and gidung[x][y] and not check_gidung(x, y):
+                    bow[x][y] = 1
+                elif y < n and gidung[x+1][y] and not check_gidung(x+1, y):
+                    bow[x][y] = 1
+
+    
+    # 설치된 기둥, 보 찾기
+    answer = []
+    for x in range(n+1):
+        for y in range(n+1):
+            if y < n and gidung[x][y]:
+                answer.append([x, y, 0])
+            if x < n and bow[x][y]:
+                answer.append([x, y, 1])
+
+    return answer
