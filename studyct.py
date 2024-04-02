@@ -1514,30 +1514,48 @@ def solution(n, build_frame):
 # 개발팀이 궁금해하는 문의조건이 문자열 형태로 담긴 배열 query가 매개변수로 주어질 때,
 # 각 문의조건에 해당하는 사람들의 숫자를 순서대로 배열에 담아 return 하도록 solution 함수를 완성해 주세요.
 from itertools import combinations
+from bisect import bisect_left
 
 
 def solution(info, query):
-    answer = [0 for i in range(len(query))]
-    infol = []
-    queryl = []
-    for i in range(len(info)):
-        infol.append(info[i].split())
-        # tmp = ['java', 'backend', 'junior', 'pizza', '150']
-    for j in range(len(query)):
-        queryl.append(query[j].split())
-        while len(queryl[j]) > 5:
-            queryl[j].remove("and")
+    answer = []
+    info_dict = {}
 
-    for i in range(len(infol)):
-        for j in range(len(queryl)):
-            flag = 0
-            for k in range(4):
-                if infol[i][k] != queryl[j][k]:
-                    if queryl[j][k] != '-':
-                        flag = 1
-                        break
-            if flag == 0:
-                if int(infol[i][4]) >= int(queryl[j][4]):
-                    answer[j] += 1
+    for i in range(len(info)):
+        infol = info[i].split()  # info안의 문자열을 공백을 기준으로 분리
+        mykey = infol[:-1]  # info의 점수제외부분을 key로 분류
+        myval = infol[-1]  # info의 점수부분을 value로 분류
+
+        for j in range(5):  # key들로 만들 수 있는 모든 조합 생성
+            for c in combinations(mykey, j):
+                tmp = ''.join(c)
+                if tmp in info_dict:
+                    info_dict[tmp].append(int(myval))  # 그 조합의 key값에 점수 추가
+                else:
+                    info_dict[tmp] = [int(myval)]
+
+    for k in info_dict:
+        info_dict[k].sort()  # dict안의 조합들을 점수순으로 정렬
+
+    for qu in query:  # query도 마찬가지로 key와 value로 분리
+        myqu = qu.split(' ')
+        qu_key = myqu[:-1]
+        qu_val = myqu[-1]
+
+        while 'and' in qu_key:  # and 제거
+            qu_key.remove('and')
+        while '-' in qu_key:  # - 제거
+            qu_key.remove('-')
+        qu_key = ''.join(qu_key)  # dict의 key처럼 문자열로 변경
+
+        if qu_key in info_dict:  # query의 key가 info_dict의 key로 존재하면
+            scores = info_dict[qu_key]
+
+            if scores:  # score리스트에 값이 존재하면
+                enter = bisect_left(scores, int(qu_val))
+
+                answer.append(len(scores) - enter)
+        else:
+            answer.append(0)
 
     return answer
