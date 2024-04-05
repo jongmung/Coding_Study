@@ -1606,3 +1606,68 @@ def solution(n, m, x, y, r, c, k):
                 break
 
     return answer
+
+# 등산코스 정하기
+# XX산은 n개의 지점으로 이루어져 있습니다. 각 지점은 1부터 n까지 번호가 붙어있으며,
+# 출입구, 쉼터, 혹은 산봉우리입니다. 각 지점은 양방향 통행이 가능한 등산로로 연결되어 있으며,
+# 서로 다른 지점을 이동할 때 이 등산로를 이용해야 합니다.
+# 이때, 등산로별로 이동하는데 일정 시간이 소요됩니다.
+# 등산코스는 방문할 지점 번호들을 순서대로 나열하여 표현할 수 있습니다.
+# 등산코스를 따라 이동하는 중 쉼터 혹은 산봉우리를 방문할 때마다 휴식을 취할 수 있으며,
+# 휴식 없이 이동해야 하는 시간 중 가장 긴 시간을 해당 등산코스의 intensity라고 부르기로 합니다.
+# 당신은 XX산의 출입구 중 한 곳에서 출발하여 산봉우리 중 한 곳만 방문한 뒤 다시 원래의 출입구로 돌아오는 등산코스를 정하려고 합니다.
+# 다시 말해, 등산코스에서 출입구는 처음과 끝에 한 번씩, 산봉우리는 한 번만 포함되어야 합니다.
+# 당신은 이러한 규칙을 지키면서 intensity가 최소가 되도록 등산코스를 정하려고 합니다.
+# XX산의 지점 수 n, 각 등산로의 정보를 담은 2차원 정수 배열 paths, 출입구들의 번호가 담긴 정수 배열 gates,
+# 산봉우리들의 번호가 담긴 정수 배열 summits가 매개변수로 주어집니다.
+# 이때, intensity가 최소가 되는 등산코스에 포함된 산봉우리 번호와 intensity의 최솟값을 차례대로 정수 배열에 담아 return 하도록 solution 함수를 완성해주세요.
+# intensity가 최소가 되는 등산코스가 여러 개라면 그중 산봉우리의 번호가 가장 낮은 등산코스를 선택합니다.
+from collections import defaultdict
+from heapq import heappop, heappush
+# n: 노드 수
+# gates: 출입구, sumits: 산봉우리
+def solution(n, paths, gates, summits):
+    def get_min_intensity():
+        pq = []  # (intensity, 현재 위치)
+        visited = [10000001] * (n + 1)
+
+        # 모든 출발지를 우선순위 큐에 삽입
+        for gate in gates:
+            heappush(pq, (0, gate))
+            visited[gate] = 0
+
+        # 산봉우리에 도착할 때까지 반복
+        while pq:
+            intensity, node = heappop(pq)
+
+            # 산봉우리이거나 더 큰 intensity라면 더 이상 이동하지 않음
+            if node in summits_set or intensity > visited[node]:
+                continue
+
+            # 이번 위치에서 이동할 수 있는 곳으로 이동
+            for weight, next_node in graph[node]:
+                # next_node 위치에 더 작은 intensity로 도착할 수 있다면 큐에 넣지 않음
+                # (출입구는 이미 0으로 세팅되어있기 때문에 방문하지 않음)
+                new_intensity = max(intensity, weight)
+                if new_intensity < visited[next_node]:
+                    visited[next_node] = new_intensity
+                    heappush(pq, (new_intensity, next_node))
+
+        # 구한 intensity 중 가장 작은 값 반환
+        min_intensity = [0, 10000001]
+        for summit in summits:
+            if visited[summit] < min_intensity[1]:
+                min_intensity[0] = summit
+                min_intensity[1] = visited[summit]
+
+        return min_intensity
+
+    summits.sort()
+    summits_set = set(summits)
+    # graph: 등산로 정보
+    graph = defaultdict(list)
+    for i, j, w in paths:
+        graph[i].append((w, j))
+        graph[j].append((w, i))
+
+    return get_min_intensity()
