@@ -1751,3 +1751,55 @@ def solution(friends, gifts):
     
     answer = max(will_get)
     return answer
+
+# 이모티콘 할인행사
+# 카카오톡에서는 이모티콘을 무제한으로 사용할 수 있는 이모티콘 플러스 서비스 가입자 수를 늘리려고 합니다.
+# 이를 위해 카카오톡에서는 이모티콘 할인 행사를 하는데, 목표는 다음과 같습니다.
+#   1. 이모티콘 플러스 서비스 가입자를 최대한 늘리는 것.
+#   2. 이모티콘 판매액을 최대한 늘리는 것.
+# 1번 목표가 우선이며, 2번 목표가 그 다음입니다.
+# 이모티콘 할인 행사는 다음과 같은 방식으로 진행됩니다.
+#   n명의 카카오톡 사용자들에게 이모티콘 m개를 할인하여 판매합니다.
+#   이모티콘마다 할인율은 다를 수 있으며, 할인율은 10%, 20%, 30%, 40% 중 하나로 설정됩니다.
+# 카카오톡 사용자들은 다음과 같은 기준을 따라 이모티콘을 사거나, 이모티콘 플러스 서비스에 가입합니다.
+#   각 사용자들은 자신의 기준에 따라 일정 비율 이상 할인하는 이모티콘을 모두 구매합니다.
+#   각 사용자들은 자신의 기준에 따라 이모티콘 구매 비용의 합이 일정 가격 이상이 된다면, 이모티콘 구매를 모두 취소하고 이모티콘 플러스 서비스에 가입합니다.
+# 카카오톡 사용자 n명의 구매 기준을 담은 2차원 정수 배열 users, 이모티콘 m개의 정가를 담은 1차원 정수 배열 emoticons가 주어집니다.
+# 이때, 행사 목적을 최대한으로 달성했을 때의 이모티콘 플러스 서비스 가입 수와 이모티콘 매출액을 1차원 정수 배열에 담아 return 하도록 solution 함수를 완성해주세요.
+def solution(users, emoticons):
+    answer = [0, 0]
+    data = [10, 20, 30, 40]
+    discount = []
+    def dfs(tmp, d): # 모든 경우의 할인율 조합을 구함
+        if d == len(tmp):
+            discount.append(tmp[:])
+            return
+        else:
+            for i in data:
+                tmp[d] += i
+                dfs(tmp, d+1)
+                tmp[d] -= i
+    dfs([0]*len(emoticons), 0)
+    
+    for disc in discount: # 만들어진 모든 조합을 하나씩 살펴봄
+        cnt = 0
+        get = 0
+        for i in users:
+            pay = 0
+            for j in range(len(disc)):
+                if i[0] <= disc[j]:
+                    pay += emoticons[j] * (100 - disc[j])/100
+                if pay >= i[1]:
+                    break
+            if pay >= i[1]: # 만약 유저의 제한금액 초과시 플러스 구매
+                pay = 0
+                cnt += 1
+            get += pay
+        if cnt >= answer[0]: # 현재 최대값을 넘어가면 갱신
+            if cnt == answer[0]:
+                answer[1] = max(answer[1], get)
+            else:
+                answer[1] = get
+            answer[0] = cnt
+
+    return answer
