@@ -1847,3 +1847,51 @@ def solution(bandage, health, attacks):
         cur_health = min(cur_health, max_health)
     
     return cur_health
+
+# [PCCP 기출문제] 2번 / 석유 시추
+# 세로길이가 n 가로길이가 m인 격자 모양의 땅 속에서 석유가 발견되었습니다.
+# 석유는 여러 덩어리로 나누어 묻혀있습니다. 당신이 시추관을 수직으로 단 하나만 뚫을 수 있을 때,
+# 가장 많은 석유를 뽑을 수 있는 시추관의 위치를 찾으려고 합니다.
+# 시추관은 열 하나를 관통하는 형태여야 하며, 열과 열 사이에 시추관을 뚫을 수 없습니다.
+# 석유가 묻힌 땅과 석유 덩어리를 나타내는 2차원 정수 배열 land가 매개변수로 주어집니다.
+# 이때 시추관 하나를 설치해 뽑을 수 있는 가장 많은 석유량을 return 하도록 solution 함수를 완성해 주세요.
+from collections import deque
+def solution(land):
+    answer = 0
+    n, m = len(land), len(land[0])
+    # 방문배열
+    visited = [[False] * m for _ in range(n)]
+    # 각 열의 기름의 총량을 저장하는 리스트
+    oil = [0] * m
+    directions = [(0, 1), (1, 0), (-1, 0), (0, -1)]
+    def bfs(row, col):
+        queue = deque()
+        queue.append([row, col])
+        visited[row][col] = True
+        cnt = 1
+        # bfs 탐색중 석유가 있는 열, 중복을 방지하기 위한 set
+        oil_covered = {col}
+
+        while queue:
+            pr, pc = queue.popleft()
+            for dr, dc in directions:
+                nr, nc = pr + dr, pc + dc
+                if 0 <= nr < n and 0 <= nc < m and land[nr][nc] == 1 and not visited[nr][nc]:
+                    queue.append([nr, nc])
+                    visited[nr][nc] = True
+                    cnt += 1
+                    # 현재 석유를 발견한 열 추가
+                    oil_covered.add(nc)
+
+        # 각 열을 돌면서 석유량 추가
+        for c in oil_covered:
+            oil[c] += cnt
+
+    # bfs 탐색
+    for i in range(n):
+        for j in range(m):
+            if land[i][j] == 1 and not visited[i][j]:
+                bfs(i, j)
+
+    answer = max(oil)
+    return answer
