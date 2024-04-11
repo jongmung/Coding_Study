@@ -1895,3 +1895,32 @@ def solution(land):
 
     answer = max(oil)
     return answer
+
+# 파괴되지 않은 건물
+# N x M 크기의 행렬 모양의 게임 맵이 있습니다. 이 맵에는 내구도를 가진 건물이 각 칸마다 하나씩 있습니다.
+# 적은 이 건물들을 공격하여 파괴하려고 합니다. 건물은 적의 공격을 받으면 내구도가 감소하고 내구도가 0이하가 되면 파괴됩니다.
+# 반대로, 아군은 회복 스킬을 사용하여 건물들의 내구도를 높이려고 합니다.
+# 적의 공격과 아군의 회복 스킬은 항상 직사각형 모양입니다.
+# 건물의 내구도를 나타내는 2차원 정수 배열 board와 적의 공격 혹은 아군의 회복 스킬을 나타내는 2차원 정수 배열 skill이 매개변수로 주어집니다.
+# 적의 공격 혹은 아군의 회복 스킬이 모두 끝난 뒤 파괴되지 않은 건물의 개수를 return하는 solution함수를 완성해 주세요.
+def solution(board, skill):
+    R, C = len(board), len(board[0])
+    delta = [[0] * (C+1) for _ in range(R+1)]
+    
+    for op, rmin, cmin, rmax, cmax, degree in skill:
+        degree = -degree if op == 1 else degree
+        
+        delta[rmin][cmin] += degree
+        delta[rmax+1][cmin] -= degree
+        delta[rmin][cmax+1] -= degree
+        delta[rmax+1][cmax+1] += degree
+        
+    for r in range(R):
+        for c in range(1, C):
+            delta[r][c] += delta[r][c-1]
+    
+    for c in range(C):
+        for r in range(1, R):
+            delta[r][c] += delta[r-1][c]
+
+    return sum(board[r][c] + delta[r][c] > 0 for r in range(R) for c in range(C))
