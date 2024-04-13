@@ -1986,3 +1986,23 @@ def solution(board):
             if nxt not in confirm:
                 que.append((*nxt, count+1))
                 confirm.add(nxt)
+                
+# 산 모양 타일링
+# 한 변의 길이가 1인 정삼각형 2n+1개를 이어붙여 윗변의 길이가 n,
+# 아랫변의 길이가 n+1인 사다리꼴을 만들 수 있습니다.
+# 이때 사다리꼴의 윗변과 변을 공유하는 n개의 정삼각형 중 일부의 위쪽에 같은 크기의 정삼각형을 붙여 새로운 모양을 만들었습니다.
+# 사다리꼴의 윗변의 길이를 나타내는 정수 n과 사다리꼴 윗변에 붙인 정삼각형을 나타내는 1차원 정수 배열 tops가 매개변수로 주어집니다.
+# 이때 문제 설명에 따라 만든 모양을 정삼각형 또는 마름모 타일로 빈 곳이 없도록 채우는 경우의 수를 10007로 나눈 나머지를 return 하도록 solution 함수를 완성해 주세요.
+def solution(n, tops):
+    MOD = 10007
+    dp1 = [0] * n
+    dp2 = [0] * n
+    dp1[0] = 1
+    dp2[0] = 2 + tops[0]
+    
+    for i in range(1, n):
+        dp1[i] = (dp1[i - 1] + dp2[i - 1]) % MOD
+        dp2[i] = ((dp1[i - 1] * (1 + tops[i])) + \
+                (dp2[i - 1] * (2 + tops[i]))) % MOD
+        
+    return (dp1[-1] + dp2[-1]) % MOD
