@@ -2043,3 +2043,23 @@ def solution(enroll, referral, seller, amount):
                 target = parentTree[target]
                     
     return list(answer.values())
+
+# 최적의 행렬 곱셈
+# 크기가 a by b인 행렬과 크기가 b by c 인 행렬이 있을 때,
+# 두 행렬을 곱하기 위해서는 총 a x b x c 번 곱셈해야합니다.
+# 각 행렬의 크기 matrix_sizes 가 매개변수로 주어 질 때,
+# 모든 행렬을 곱하기 위한 최소 곱셈 연산의 수를 return하는 solution 함수를 완성해 주세요.
+def solution(sizes):
+    dp = [[0 for j in range(len(sizes))] for i in range(len(sizes))]
+    for gap in range(1, len(sizes)) : 
+        for s in range(0, len(sizes)-gap) : 
+            e = s+gap
+            
+            candidate = list()
+            for m in range(s, e) :
+                candidate.append(
+                    dp[s][m]+dp[m+1][e]+
+                    sizes[s][0]*sizes[m][1]*sizes[e][1])
+            dp[s][e] = min(candidate)
+            
+    return dp[0][-1]
