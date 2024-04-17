@@ -2108,3 +2108,48 @@ def solution(rectangle, characterX, characterY, itemX, itemY):
                 visited[nx][ny] += visited[x][y]
                 dq.append((nx, ny))
     return answer
+
+# 표현 가능한 이진트리
+# 당신은 이진트리를 수로 표현하는 것을 좋아합니다.
+# 이진트리를 수로 표현하는 방법은 다음과 같습니다.
+#   1.이진수를 저장할 빈 문자열을 생성합니다.
+#   2.주어진 이진트리에 더미 노드를 추가하여 포화 이진트리로 만듭니다. 루트 노드는 그대로 유지합니다.
+#   3.만들어진 포화 이진트리의 노드들을 가장 왼쪽 노드부터 가장 오른쪽 노드까지, 왼쪽에 있는 순서대로 살펴봅니다. 노드의 높이는 살펴보는 순서에 영향을 끼치지 않습니다.
+#   4.살펴본 노드가 더미 노드라면, 문자열 뒤에 0을 추가합니다. 살펴본 노드가 더미 노드가 아니라면, 문자열 뒤에 1을 추가합니다.
+#   5.문자열에 저장된 이진수를 십진수로 변환합니다.
+# 이진트리에서 리프 노드가 아닌 노드는 자신의 왼쪽 자식이 루트인 서브트리의 노드들보다 오른쪽에 있으며,
+# 자신의 오른쪽 자식이 루트인 서브트리의 노드들보다 왼쪽에 있다고 가정합니다.
+# 이진트리로 만들고 싶은 수를 담은 1차원 정수 배열 numbers가 주어집니다. numbers에 주어진 순서대로 하나의 이진트리로 해당 수를 표현할 수 있다면 1을,
+# 표현할 수 없다면 0을 1차원 정수 배열에 담아 return 하도록 solution 함수를 완성해주세요.
+def dfs(b, i, depth):
+    if depth == 0:  	# 리프 노드에 도달했다면
+        return True 	# 포화이진트리
+    
+    # 부모노드가 '0' 일때
+    # 왼쪽 자식 노드가 '1' 이거나 오른쪽 자식 노드가 '1' 이라면 포화 이진트리가 될 수 없음
+    elif b[i] == '0':   
+        if b[i - depth] == '1' or b[i + depth] == '1': return False
+
+    # 왼쪽 서브 트리 탐색
+    left = dfs(b, i - depth, depth // 2)
+    # 오른쪽 서브 트리 탐색
+    right = dfs(b, i + depth, depth // 2)
+    return left and right
+    
+    
+def solution(numbers):
+    answer = []
+    for num in numbers:				# num = 42
+        b = bin(num)[2:]  			# b = 101010 / len(b) = 6
+        nodes = bin(len(b) + 1)[2:] 	# nodes = 7 = 111
+        
+        # 포화이진트리가 아닌 경우 더미노드(0추가)
+        if '1' in nodes[1:]:       
+            dummies = (1 << len(nodes)) - int(nodes, 2)
+            b = '0' * dummies + b
+            
+        # 이미 포화이진트리일 경우
+        result = dfs(b, len(b)//2, (len(b)+1)//4)
+        answer.append(1 if result else 0)
+        
+    return answer
