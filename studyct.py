@@ -2153,3 +2153,57 @@ def solution(numbers):
         answer.append(1 if result else 0)
         
     return answer
+
+# 매칭 점수
+# 프렌즈 대학교 조교였던 제이지는 허드렛일만 시키는 네오 학과장님의 마수에서 벗어나, 카카오에 입사하게 되었다.
+# 평소에 관심있어하던 검색에 마침 결원이 발생하여, 검색개발팀에 편입될 수 있었고, 대망의 첫 프로젝트를 맡게 되었다.
+# 그 프로젝트는 검색어에 가장 잘 맞는 웹페이지를 보여주기 위해 아래와 같은 규칙으로 검색어에 대한 웹페이지의 매칭점수를 계산 하는 것이었다.
+#   한 웹페이지에 대해서 기본점수, 외부 링크 수, 링크점수, 그리고 매칭점수를 구할 수 있다.
+#   한 웹페이지의 기본점수는 해당 웹페이지의 텍스트 중, 검색어가 등장하는 횟수이다. (대소문자 무시)
+#   한 웹페이지의 외부 링크 수는 해당 웹페이지에서 다른 외부 페이지로 연결된 링크의 개수이다.
+#   한 웹페이지의 링크점수는 해당 웹페이지로 링크가 걸린 다른 웹페이지의 기본점수 ÷ 외부 링크 수의 총합이다.
+#   한 웹페이지의 매칭점수는 기본점수와 링크점수의 합으로 계산한다.
+# 검색어 word와 웹페이지의 HTML 목록인 pages가 주어졌을 때, 매칭점수가 가장 높은 웹페이지의 index를 구하라.
+# 만약 그런 웹페이지가 여러 개라면 그중 번호가 가장 작은 것을 구하라.
+import re
+def solution(word, pages):
+    webpage = []
+    webpageName = []
+    webpageGraph = dict() # 나를 가리키는 외부 링크
+    
+    for page in pages:
+        url = re.search('<meta property="og:url" content="(\S+)"', page).group(1)
+        basicScore = 0
+        for f in re.findall(r'[a-zA-Z]+', page.lower()):
+            if f == word.lower():
+                basicScore += 1
+        exiosLink = re.findall('<a href="(https://[\S]*)"', page)
+        
+        for link in exiosLink:
+            if link not in webpageGraph.keys():
+                webpageGraph[link] = [url]
+            else:
+                webpageGraph[link].append(url)
+        
+        webpageName.append(url)
+        webpage.append([url, basicScore, len(exiosLink)]) # 내가 가진 외부 링크 (개수)
+        
+    # 링크점수 = 해당 웹페이지로 링크가 걸린 다른 웹페이지의 기본점수 ÷ 외부 링크 수의 총합
+    # 매칭점수 = 기본점수 + 링크점수
+    maxValue = 0
+    result = 0
+    for i in range(len(webpage)):
+        url = webpage[i][0]
+        score = webpage[i][1]
+        
+        if url in webpageGraph.keys():
+            # 나를 가리키는 다른 링크의 기본점수 ÷ 외부 링크 수의 총합을 구하기 위해
+            for link in webpageGraph[url]: 
+                a, b, c = webpage[webpageName.index(link)]
+                score += (b / c)
+        
+        if maxValue < score:
+            maxValue = score
+            result = i
+    
+    return result
