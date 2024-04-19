@@ -2207,3 +2207,80 @@ def solution(word, pages):
             result = i
     
     return result
+
+# 표 편집
+# 위 그림에서 파란색으로 칠해진 칸은 현재 선택된 행을 나타냅니다. 단, 한 번에 한 행만 선택할 수 있으며, 표의 범위(0행 ~ 마지막 행)를 벗어날 수 없습니다.
+# 이때, 다음과 같은 명령어를 이용하여 표를 편집합니다.
+#   "U X": 현재 선택된 행에서 X칸 위에 있는 행을 선택합니다.
+#   "D X": 현재 선택된 행에서 X칸 아래에 있는 행을 선택합니다.
+#   "C" : 현재 선택된 행을 삭제한 후, 바로 아래 행을 선택합니다. 단, 삭제된 행이 가장 마지막 행인 경우 바로 윗 행을 선택합니다.
+#   "Z" : 가장 최근에 삭제된 행을 원래대로 복구합니다. 단, 현재 선택된 행은 바뀌지 않습니다.
+# 처음 표의 행 개수를 나타내는 정수 n, 처음에 선택된 행의 위치를 나타내는 정수 k,
+# 수행한 명령어들이 담긴 문자열 배열 cmd가 매개변수로 주어질 때,
+# 모든 명령어를 수행한 후 표의 상태와 처음 주어진 표의 상태를 비교하여 삭제되지 않은 행은 O,
+# 삭제된 행은 X로 표시하여 문자열 형태로 return 하도록 solution 함수를 완성해주세요.
+N = 10**9
+class Node:
+    # 활성, 비활성
+    live = True
+    # 이전 노드와 다음 노드
+    def __init__(self, p, n):
+        self.prev = p if p >= 0 else None
+        self.next = n if n < N else None
+def solution(n, k, camaand):
+    global N
+    N = n
+    # linked list
+    table = {i: Node(i-1, i+1) for i in range(n)}
+    # 현재 선택된 행
+    now = k
+    # 삭제된 번호
+    stack = []
+    for cmd in camaand:
+        # 삭제
+        if cmd[0] == 'C':
+            # 비활성
+            table[now].live = False
+            stack.append(now)
+            prev, next = table[now].prev, table[now].next
+            
+            # 이전 노드가 있다면 현재 노드의 다음 노드와 연결
+            if prev is not None:
+                table[prev].next = next
+            # 다음 노드가 있다면 이전 노드를 다음 노드와 연결
+            if next is not None:
+                table[next].prev = prev
+            # 다음 노드가 없다면 이전 노드 선택, 아니면 다음 노드 선택택
+            if table[now].next is None:
+                now = table[now].prev
+            else:
+                now = table[now].next
+
+        # 복구
+        elif cmd[0] == 'Z':
+            # 활성
+            re = stack.pop()
+            table[re].live = True
+            prev, next = table[re].prev, table[re].next
+
+            # 이전 노드가 있다면 복구 행과 이전노드 연결
+            if prev is not None:
+                table[prev].next = re
+            # 다음 노드가 있다면 복구 행과 다음 노드 연결
+            if next is not None:
+                table[next].prev = re
+        else:
+            c, amout = cmd.split()
+            # 위
+            if c == 'U':
+                # 연결된 이전 노드로 계속 변경
+                for _ in range(int(amout)):
+                    now = table[now].prev
+
+            # 아래
+            else:
+                # 연결된 다음 노드로 계속 이동
+                for _ in range(int(amout)):
+                    now = table[now].next
+
+    return ''.join('O' if table[i].live else 'X' for i in range(n))
