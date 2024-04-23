@@ -2375,3 +2375,55 @@ def throughput(log, start, end):
         if x[0] < end and x[1] >= start:
             cnt += 1
     return cnt
+
+# 공 이동 시뮬레이션
+# n행 m열의 격자가 있습니다. 격자의 각 행은 0, 1, ..., n-1번의 번호,
+# 그리고 각 열은 0, 1, ..., m-1번의 번호가 순서대로 매겨져 있습니다.
+# 당신은 이 격자에 공을 하나 두고, 그 공에 다음과 같은 쿼리들을 날리고자 합니다.
+#   열 번호가 감소하는 방향으로 dx칸 이동하는 쿼리 (query(0, dx))
+#   열 번호가 증가하는 방향으로 dx칸 이동하는 쿼리 (query(1, dx))
+#   행 번호가 감소하는 방향으로 dx칸 이동하는 쿼리 (query(2, dx))
+#   행 번호가 증가하는 방향으로 dx칸 이동하는 쿼리 (query(3, dx))
+# 단, 공은 격자 바깥으로 이동할 수 없으며, 목적지가 격자 바깥인 경우 공은 이동하다가 더 이상 이동할 수 없을 때 멈추게 됩니다.
+#   예를 들어, 5행 × 4열 크기의 격자 내의 공이 3행 2열에 있을 때 query(3, 10) 쿼리를 받은 경우 공은 4행 2열에서 멈추게 됩니다.
+#   (격자의 크기가 5행 × 4열이므로, 0~4번 행과 0~3번 열로 격자가 구성되기 때문입니다.)
+# 격자의 행의 개수 n, 열의 개수 m, 정수 x와 y, 그리고 쿼리들의 목록을 나타내는 2차원 정수 배열 queries가 매개변수로 주어집니다.
+# n × m개의 가능한 시작점에 대해서 해당 시작점에 공을 두고 queries 내의 쿼리들을 순서대로 시뮬레이션했을 때,
+# x행 y열에 도착하는 시작점의 개수를 return 하도록 solution 함수를 완성해주세요.
+def solution(n, m, x, y, queries):
+    answer = 0
+    x_min, x_max, y_min, y_max = x, x, y, y
+    for idx in range(len(queries) - 1, -1, -1):
+        direc, dist = queries[idx]
+        if direc == 0:  # 좌(오른쪽에서 왔음)
+            y_max += dist  # 오른쪽으로 늘리기
+            if y_max > m - 1: # 범위 벗어나면
+                y_max = m - 1  # 끝값으로
+            if y_min != 0:  # 왼쪽 값이 끝이 아니면 범위 축소
+                y_min += dist
+
+        elif direc == 1:  # 우(왼쪽에서 왔음)
+            y_min -= dist
+            if y_min < 0:
+                y_min = 0
+            if y_max != m - 1:
+                y_max -= dist
+
+        elif direc == 2:  # 상(아래서 왔음)
+            x_max += dist
+            if x_max > n - 1:
+                x_max = n - 1
+            if x_min != 0:
+                x_min += dist
+
+        else:  # 하(위에서 왔음)
+            x_min -= dist
+            if x_min < 0:
+                x_min = 0
+            if x_max != n - 1:
+                x_max -= dist
+        if y_min > m - 1 or y_max < 0 or x_min > n - 1 or x_max < 0:
+            return answer
+    else:
+         answer = (y_max - y_min + 1) * (x_max - x_min + 1)
+    return answer
