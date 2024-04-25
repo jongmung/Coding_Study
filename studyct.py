@@ -2532,3 +2532,55 @@ def solution(game_board, table):
                 break
 
     return answer
+
+# 금과 은 운반하기
+# 어느 왕국에 하나 이상의 도시들이 있습니다. 왕국의 왕은 새 도시를 짓기로 결정하였습니다.
+# 해당 도시를 짓기 위해서는 도시를 짓는 장소에 금 a kg과 은 b kg이 전달되어야 합니다.
+# 각 도시에는 번호가 매겨져 있는데, i번 도시에는 금 g[i] kg, 은 s[i] kg, 그리고 트럭 한 대가 있습니다.
+# i번 도시의 트럭은 오직 새 도시를 짓는 건설 장소와 i번 도시만을 왕복할 수 있으며, 편도로 이동하는 데 t[i] 시간이 걸리고,
+# 최대 w[i] kg 광물을 운반할 수 있습니다. (광물은 금과 은입니다. 즉, 금과 은을 동시에 운반할 수 있습니다.)
+# 모든 트럭은 같은 도로를 여러 번 왕복할 수 있으며 연료는 무한대라고 가정합니다.
+# 정수 a, b와 정수 배열 g, s, w, t가 매개변수로 주어집니다. 주어진 정보를 바탕으로 각 도시의 트럭을 최적으로 운행했을 때,
+# 새로운 도시를 건설하기 위해 금 a kg과 은 b kg을 전달할 수 있는 가장 빠른 시간을 구해 return 하도록 solution 함수를 완성해주세요.
+def solution(a, b, g, s, w, t):
+    start = 0
+    # 최악의 경우
+    # 광물의 최대무게 : 10**9 * 2(금,은)
+    # 도시가 1개만 있고 소요시간이 최대, 1씩 옮길 수 있을 때 : 10**5 * 2(왕복)
+    answer = end = (10 ** 9) * (10 ** 5) * 4
+
+    # 이진 탐색
+    while start <= end:
+        mid = (start + end) // 2
+        gold = 0
+        silver = 0
+        total = 0
+
+        for i in range(len(g)):
+            # 현재 정보
+            now_gold = g[i]
+            now_silver = s[i]
+            now_weight = w[i]
+            now_time = t[i]
+
+            # 주어진 시간내에서 이동할 수 있는 횟수 (왕복으로 계산)
+            move_cnt = mid // (now_time * 2)
+
+            # 편도 추가
+            if mid % (now_time * 2) >= now_time:
+                move_cnt += 1
+
+            # 주어지 시간 내 최대 적재 가능량 누적하기
+            possible_move_weight = move_cnt * now_weight
+            gold += now_gold if (now_gold < possible_move_weight) else possible_move_weight
+            silver += now_silver if (now_silver < possible_move_weight) else possible_move_weight
+            total += now_gold + now_silver if (now_gold + now_silver < possible_move_weight) else possible_move_weight
+
+        # total이 a+b 보다 크거나 같으면서 금과 은의 누적 최대값이 a와 b보다 크거나 같아야 한다.
+        # 만약 금과 은의 누적 최대값이 보내야만 하는 a,b보다 작다면 현재 시간 내 처리 불가능하다.
+        if total >= a + b and gold >= a and silver >= b:
+            end = mid - 1
+            answer = min(answer, mid)
+        else:
+            start = mid + 1
+    return answer
