@@ -2584,3 +2584,49 @@ def solution(a, b, g, s, w, t):
         else:
             start = mid + 1
     return answer
+
+# 광고 삽입
+#  "죠르디"의 동영상 재생시간 길이 play_time, 공익광고의 재생시간 길이 adv_time,
+# 시청자들이 해당 동영상을 재생했던 구간 정보 logs가 매개변수로 주어질 때,
+# 시청자들의 누적 재생시간이 가장 많이 나오는 곳에 공익광고를 삽입하려고 합니다.
+# 이때, 공익광고가 들어갈 시작 시각을 구해서 return 하도록 solution 함수를 완성해주세요.
+# 만약, 시청자들의 누적 재생시간이 가장 많은 곳이 여러 곳이라면,
+# 그 중에서 가장 빠른 시작 시각을 return 하도록 합니다.
+def str2int(time):
+    hour = int(time[:2]) * 3600
+    minute = int(time[3:5]) * 60
+    second = int(time[6:])
+    
+    return hour+minute+second
+
+def int2str(time):
+    hour = str(time // 3600).zfill(2)
+    minute = str(time % 3600 // 60).zfill(2)
+    second = str(time % 3600 % 60).zfill(2)
+    
+    return hour+":"+minute+":"+second
+
+def solution(play_time, adv_time, logs):
+    dp = [0] * (str2int(play_time) + 1)
+    
+    for i in logs:
+        temp = i.split('-')
+        start = str2int(temp[0])
+        end = str2int(temp[1])
+        dp[start] += 1
+        dp[end] -= 1
+        
+    for i in range(1, str2int(play_time)):
+        dp[i] = dp[i] + dp[i-1]
+    for i in range(1, str2int(play_time)):
+        dp[i] = dp[i] + dp[i-1]
+    
+    max_value = -1
+    answer = 0
+    for i in range(str2int(adv_time)-1, str2int(play_time)):
+        temp = dp[i] - dp[i-str2int(adv_time)] 
+        if temp > max_value:
+            max_value = temp
+            answer = i-str2int(adv_time) + 1
+            
+    return int2str(answer)
