@@ -2630,3 +2630,162 @@ def solution(play_time, adv_time, logs):
             answer = i-str2int(adv_time) + 1
             
     return int2str(answer)
+
+# 카드 짝 맞추기
+# 게임 개발자인 베로니는 개발 연습을 위해 다음과 같은 간단한 카드 짝맞추기 보드 게임을 개발해 보려고 합니다.
+# 게임이 시작되면 화면에는 카드 16장이 뒷면을 위로하여 4 x 4 크기의 격자 형태로 표시되어 있습니다.
+# 각 카드의 앞면에는 카카오프렌즈 캐릭터 그림이 그려져 있으며, 8가지의 캐릭터 그림이 그려진 카드가 각기 2장씩 화면에 무작위로 배치되어 있습니다.
+# 유저가 카드를 2장 선택하여 앞면으로 뒤집었을 때 같은 그림이 그려진 카드면 해당 카드는 게임 화면에서 사라지며,
+# 같은 그림이 아니라면 원래 상태로 뒷면이 보이도록 뒤집힙니다. 이와 같은 방법으로 모든 카드를 화면에서 사라지게 하면 게임이 종료됩니다.
+# 게임에서 카드를 선택하는 방법은 다음과 같습니다.
+#   카드는 커서를 이용해서 선택할 수 있습니다.
+#       커서는 4 x 4 화면에서 유저가 선택한 현재 위치를 표시하는 "굵고 빨간 테두리 상자"를 의미합니다.
+#   커서는 [Ctrl] 키와 방향키에 의해 이동되며 키 조작법은 다음과 같습니다.
+#       방향키 ←, ↑, ↓, → 중 하나를 누르면, 커서가 누른 키 방향으로 1칸 이동합니다.
+#       [Ctrl] 키를 누른 상태에서 방향키 ←, ↑, ↓, → 중 하나를 누르면, 누른 키 방향에 있는 가장 가까운 카드로 한번에 이동합니다.
+#           만약, 해당 방향에 카드가 하나도 없다면 그 방향의 가장 마지막 칸으로 이동합니다.
+#       만약, 누른 키 방향으로 이동 가능한 카드 또는 빈 공간이 없어 이동할 수 없다면 커서는 움직이지 않습니다.
+#   커서가 위치한 카드를 뒤집기 위해서는 [Enter] 키를 입력합니다.
+#       [Enter] 키를 입력해서 카드를 뒤집었을 때
+#           앞면이 보이는 카드가 1장 뿐이라면 그림을 맞출 수 없으므로 두번째 카드를 뒤집을 때 까지 앞면을 유지합니다.
+#           앞면이 보이는 카드가 2장이 된 경우, 두개의 카드에 그려진 그림이 같으면 해당 카드들이 화면에서 사라지며,
+#           그림이 다르다면 두 카드 모두 뒷면이 보이도록 다시 뒤집힙니다.
+# "베로니"는 게임 진행 중 카드의 짝을 맞춰 몇 장 제거된 상태에서 카드 앞면의 그림을 알고 있다면,
+# 남은 카드를 모두 제거하는데 필요한 키 조작 횟수의 최솟값을 구해 보려고 합니다.
+# 키 조작 횟수는 방향키와 [Enter] 키를 누르는 동작을 각각 조작 횟수 1로 계산하며,
+# [Ctrl] 키와 방향키를 함께 누르는 동작 또한 조작 횟수 1로 계산합니다.
+# 현재 카드가 놓인 상태를 나타내는 2차원 배열 board와 커서의 처음 위치 r, c가 매개변수로 주어질 때,
+# 모든 카드를 제거하기 위한 키 조작 횟수의 최솟값을 return 하도록 solution 함수를 완성해 주세요.
+from itertools import permutations
+from collections import deque
+
+size = 4
+myboard = [[] for i in range(4)]
+card_pos = {}
+d = [[0,1], [1,0], [0,-1], [-1,0]]
+INF = int(1e4)
+answer = INF
+orders = []
+
+# 전역 변수를 이용한 보드(myboard), 카드 2장의 위치(card_pos) 초기화 
+# 지우는 순서에 대한 순열(orders) 초기화
+# card_pos 예시: card_pos[1] = [[0,0], [1,2]] // 카드 1은 보드의 [0,0], [1,2]에 존재 
+def init(board):
+    global myboard, card_pos, orders
+    for i in range(size):
+        for j in range(size):
+            if board[i][j] != 0:
+                card = board[i][j]
+                if card not in card_pos.keys(): card_pos[card] = [[i,j]]
+                else: card_pos[card].append([i,j])
+
+            myboard[i].append(board[i][j])
+    
+    orders = [key for key in card_pos.keys()]
+    orders = list(permutations(orders))
+    
+# 이동한 결과가 보드 범위내 있는지 판단하는 함수            
+def isin(y,x):
+    if -1<y<size:
+        if -1<x<size: return True
+        
+    return False
+
+# ctrl + 방향키
+def move(y, x, mv):
+    global myboard
+    ny, nx = y, x
+
+    while True:
+        _ny = ny + mv[0]
+        _nx = nx + mv[1]
+        if not isin(_ny, _nx): return ny, nx
+        if myboard[_ny][_nx] != 0: return _ny, _nx
+            
+        ny = _ny
+        nx = _nx
+
+# 카드 1장을 찾을 때 나오는 거리를 반환하는 함수(목표 위치도 반환함)
+# 시작 위치: myboard[sy, sx], 찾아야 할 위치: myboard[ey, ex] 
+def bfs(sy, sx, ey, ex):
+    if [sy, sx] == [ey, ex]: return sy, sx, 1
+    global myboard
+    q = []
+    q = deque(q)
+    table = [[0 for j in range(size)] for i in range(size)]
+    visit = [[False for j in range(size)] for i in range(size)]
+    q.append([sy, sx])
+    visit[sy][sx] = True
+
+    while q:
+        y, x = q.popleft()
+
+        for i in range(4):
+            ny = y + d[i][0]
+            nx = x + d[i][1]
+
+            if isin(ny, nx):
+                if not visit[ny][nx]:
+                    visit[ny][nx] = True
+                    table[ny][nx] = table[y][x] + 1
+                    if [ny,nx] == [ey,ex]:
+                        return ny, nx, table[ny][nx] + 1
+
+                    q.append([ny, nx])
+
+            ny, nx = move(y, x, d[i])
+
+            if not visit[ny][nx]:
+                visit[ny][nx] = True      
+                table[ny][nx] = table[y][x] + 1
+                if [ny,nx] == [ey,ex]:
+                    return ny, nx, table[ny][nx] + 1
+
+                q.append([ny, nx])
+
+    return sy, sx, INF
+
+# 찾은 2장의 카드를 myboard에서 지워주는 함수           
+def remove(card):
+    global myboard, card_pos
+    for y, x in card_pos[card]: myboard[y][x] = 0
+
+# 지워진 2장의 카드를 myboard에서 복원해주는 함수
+def restore(card):
+    global myboard, card_pos
+    for y, x in card_pos[card]: myboard[y][x] = card
+
+# backtracking
+def backtrack(sy, sx, k, m, count):
+    global orders, myboard, answer, card_pos
+
+    if k == len(card_pos.keys()):
+        if answer > count: answer = count
+        return
+
+    card = orders[m][k]
+    left_y, left_x = card_pos[card][0][0], card_pos[card][0][1]
+    right_y, right_x = card_pos[card][1][0], card_pos[card][1][1]
+
+    ry1, rx1, res1 = bfs(sy, sx, left_y, left_x)
+    ry2, rx2, res2 = bfs(ry1, rx1, right_y, right_x)
+    
+    remove(card)
+    backtrack(ry2, rx2, k+1, m, count + res1 + res2)
+    restore(card)
+
+    ry1, rx1, res1 = bfs(sy, sx, right_y, right_x)
+    ry2, rx2, res2 = bfs(ry1, rx1, left_y, left_x)
+
+    remove(card)
+    backtrack(ry2, rx2, k+1, m, count + res1 + res2)
+    restore(card)
+
+def solution(board, r, c):
+    global answer
+    init(board)
+
+    for i in range(len(orders)):
+        backtrack(r, c, 0, i, 0)
+
+    return answer
