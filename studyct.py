@@ -2789,3 +2789,43 @@ def solution(board, r, c):
         backtrack(r, c, 0, i, 0)
 
     return answer
+
+# 코딩 테스트 공부
+# 알고리즘에 대한 지식은 알고력, 코드를 구현하는 능력은 코딩력이라고 표현합니다. 알고력과 코딩력은 0 이상의 정수로 표현됩니다.
+# 문제를 풀기 위해서는 문제가 요구하는 일정 이상의 알고력과 코딩력이 필요합니다.
+# 풀 수 없는 문제를 해결하기 위해서는 알고력과 코딩력을 높여야 합니다. 알고력과 코딩력을 높이기 위한 다음과 같은 방법들이 있습니다.
+#   알고력을 높이기 위해 알고리즘 공부를 합니다. 알고력 1을 높이기 위해서 1의 시간이 필요합니다.
+#   코딩력을 높이기 위해 코딩 공부를 합니다. 코딩력 1을 높이기 위해서 1의 시간이 필요합니다.
+#   현재 풀 수 있는 문제 중 하나를 풀어 알고력과 코딩력을 높입니다. 각 문제마다 문제를 풀면 올라가는 알고력과 코딩력이 정해져 있습니다.
+#   문제를 하나 푸는 데는 문제가 요구하는 시간이 필요하며 같은 문제를 여러 번 푸는 것이 가능합니다.
+# 당신은 주어진 모든 문제들을 풀 수 있는 알고력과 코딩력을 얻는 최단시간을 구하려 합니다.
+# 초기의 알고력과 코딩력을 담은 정수 alp와 cop, 문제의 정보를 담은 2차원 정수 배열 problems가 매개변수로 주어졌을 때,
+# 모든 문제들을 풀 수 있는 알고력과 코딩력을 얻는 최단시간을 return 하도록 solution 함수를 작성해주세요.
+def solution(alp, cop, problems):
+    max_alp_req, max_cop_req = [0, 0]  # 목표값
+    
+    for problem in problems:
+        max_alp_req = max(max_alp_req, problem[0])
+        max_cop_req = max(max_cop_req, problem[1])
+    
+    dp = [[float('inf')] * (max_cop_req+1) for _ in range(max_alp_req+1)]
+    
+    alp = min(alp, max_alp_req)  # 둘중 하나라도 목표값을 넘어가면 안된다.
+    cop = min(cop, max_cop_req)
+    
+    dp[alp][cop] = 0  # dp[i][j]의 의미 : 알고력 i, 코딩력 j을 도달 할 수 있는 최단시간
+    
+    for i in range(alp, max_alp_req+1):
+        for j in range(cop, max_cop_req+1):
+            if i < max_alp_req:
+                dp[i+1][j] = min(dp[i+1][j], dp[i][j] + 1)
+            if j < max_cop_req:
+                dp[i][j+1] = min(dp[i][j+1], dp[i][j] + 1)
+            
+            for alp_req, cop_req, alp_rwd, cop_rwd, cost in problems:
+                if i >= alp_req and j >= cop_req:
+                    new_alp = min(i+alp_rwd, max_alp_req)  # 둘중 하나라도 목표값을 넘어가면 안된다.
+                    new_cop = min(j+cop_rwd, max_cop_req)
+                    dp[new_alp][new_cop] = min(dp[new_alp][new_cop], dp[i][j] + cost)
+                    
+    return dp[max_alp_req][max_cop_req]
