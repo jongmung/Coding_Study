@@ -2829,3 +2829,56 @@ def solution(alp, cop, problems):
                     dp[new_alp][new_cop] = min(dp[new_alp][new_cop], dp[i][j] + cost)
                     
     return dp[max_alp_req][max_cop_req]
+
+# 사라지는 발판
+# 플레이어 A와 플레이어 B가 서로 게임을 합니다.
+# 당신은 이 게임이 끝날 때까지 양 플레이어가 캐릭터를 몇 번 움직이게 될지 예측하려고 합니다.
+# 각 플레이어는 자신의 캐릭터 하나를 보드 위에 올려놓고 게임을 시작합니다.
+# 게임 보드는 1x1 크기 정사각 격자로 이루어져 있으며, 보드 안에는 발판이 있는 부분과 없는 부분이 있습니다.
+# 발판이 있는 곳에만 캐릭터가 서있을 수 있으며, 처음 캐릭터를 올려놓는 곳은 항상 발판이 있는 곳입니다.
+# 캐릭터는 발판이 있는 곳으로만 이동할 수 있으며, 보드 밖으로 이동할 수 없습니다.
+# 밟고 있던 발판은 그 위에 있던 캐릭터가 다른 곳으로 이동하여 다른 발판을 밞음과 동시에 사라집니다.
+# 양 플레이어는 번갈아가며 자기 차례에 자신의 캐릭터를 상하좌우로 인접한 4개의 칸 중에서 발판이 있는 칸으로 옮겨야 합니다.
+# 다음과 같은 2가지 상황에서 패자와 승자가 정해지며, 게임이 종료됩니다.
+#   움직일 차례인데 캐릭터의 상하좌우 주변 4칸이 모두 발판이 없거나 보드 밖이라서 이동할 수 없는 경우, 해당 차례 플레이어는 패배합니다.
+#   두 캐릭터가 같은 발판 위에 있을 때, 상대 플레이어의 캐릭터가 다른 발판으로 이동하여 자신의 캐릭터가 서있던 발판이 사라지게 되면 패배합니다.
+# 게임은 항상 플레이어 A가 먼저 시작합니다. 양 플레이어는 최적의 플레이를 합니다.
+# 즉, 이길 수 있는 플레이어는 최대한 빨리 승리하도록 플레이하고,
+# 질 수밖에 없는 플레이어는 최대한 오래 버티도록 플레이합니다. '이길 수 있는 플레이어'는 실수만 하지 않는다면 항상 이기는 플레이어를 의미하며,
+# '질 수밖에 없는 플레이어'는 최선을 다해도 상대가 실수하지 않으면 항상 질 수밖에 없는 플레이어를 의미합니다.
+# 최대한 오래 버틴다는 것은 양 플레이어가 캐릭터를 움직이는 횟수를 최대화한다는 것을 의미합니다.
+# 게임 보드의 초기 상태를 나타내는 2차원 정수 배열 board와 플레이어 A의 캐릭터 초기 위치를 나타내는 정수 배열 aloc,
+# 플레이어 B의 캐릭터 초기 위치를 나타내는 정수 배열 bloc이 매개변수로 주어집니다.
+# 양 플레이어가 최적의 플레이를 했을 때, 두 캐릭터가 움직인 횟수의 합을 return 하도록 solution 함수를 완성해주세요.
+n,m = 0,0
+move = [(0,1),(0,-1),(1,0),(-1,0)]
+visit = [[0]*5 for _ in range(5)]
+def OOB(x,y):
+    return x < 0 or x >= n or y < 0 or y >= m
+# 결과값이 
+def play(board,curx,cury,opx,opy):
+    global visit
+    if visit[curx][cury]: return 0
+    canWin = 0
+    for mov in move:
+        dx, dy = mov
+        nx, ny = curx + dx, cury + dy
+        if OOB(nx,ny) or visit[nx][ny] or board[nx][ny] == 0 : continue
+        # 방문처리
+        visit[curx][cury] = 1
+        opResult = play(board,opx,opy,nx,ny)+1
+        # 방문처리 끝
+        visit[curx][cury] = 0
+
+        # 현재 저장된 값 패배인데 상대가 졌다고 하면 이기는 경우로 저장
+        if canWin % 2 == 0 and opResult % 2 == 1 : canWin = opResult
+        # 현재 저장된 값 패배인데 상대가 이겼다고 하면 최대한 늦게 지는 횟수 선택
+        elif canWin % 2 == 0 and opResult % 2 == 0 : canWin = max(canWin,opResult)
+        # 현재 저장된 값 승리인데 상대가 졌다고 하면 최대한 빨리 이기는 횟수 선택
+        elif canWin % 2 == 1 and opResult % 2 == 1 : canWin = min(canWin,opResult)
+    return canWin
+
+def solution(board, aloc, bloc):
+    global n,m
+    n, m = len(board), len(board[0])
+    return play(board,aloc[0],aloc[1],bloc[0],bloc[1])
