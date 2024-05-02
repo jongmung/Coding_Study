@@ -2944,3 +2944,18 @@ def solution(food_times, k):
     return result[(k-sum_value)%length][1] #번호 기준으로, 남은 초수(k-sum_value) 만큼 반복
     answer = -1
     return answer
+
+# 올바른 괄호의 갯수
+# 올바른 괄호란 (())나 ()와 같이 올바르게 모두 닫힌 괄호를 의미합니다. )(나 ())() 와 같은 괄호는 올바르지 않은 괄호가 됩니다.
+# 괄호 쌍의 개수 n이 주어질 때,
+# n개의 괄호 쌍으로 만들 수 있는 모든 가능한 괄호 문자열의 갯수를 반환하는 함수 solution을 완성해 주세요.
+def solution(n):
+    answer = 1
+    dp = [0 for i in range(n+1)]
+    dp[0], dp[1] = 1, 1
+    for i in range(2, n+1):
+        for j in range(i):
+            dp[i] += dp[j] * dp[i-1-j]
+
+    answer = dp[n]
+    return answer
