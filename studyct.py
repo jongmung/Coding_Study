@@ -3031,3 +3031,30 @@ def solution(k, room_number):
         answer.append(emptyRoom)
     
     return answer
+
+# 자동완성
+# 포털 다음에서 검색어 자동완성 기능을 넣고 싶은 라이언은 한 번 입력된 문자열을 학습해서 다음 입력 때 활용하고 싶어 졌다.
+#   예를 들어, go 가 한 번 입력되었다면, 다음 사용자는 g 만 입력해도 go를 추천해주므로 o를 입력할 필요가 없어진다!
+#   단, 학습에 사용된 단어들 중 앞부분이 같은 경우에는 어쩔 수 없이 다른 문자가 나올 때까지 입력을 해야 한다.
+# 효과가 얼마나 좋을지 알고 싶은 라이언은 학습된 단어들을 찾을 때 몇 글자를 입력해야 하는지 궁금해졌다.
+# 라이언을 도와 위와 같이 문자열이 입력으로 주어지면 학습을 시킨 후, 학습된 단어들을 순서대로 찾을 때 몇 개의 문자를 입력하면 되는지 계산하는 프로그램을 만들어보자.
+def solution(words):
+    N = len(words)
+    words.sort() # 단어를 사전순으로 정렬
+    result = [0] * N # 단어마다 입력해야 하는 문자 수
+    for i in range(N - 1):
+        # 인접하는 두 단어 비교
+        a = len(words[i])
+        b = len(words[i + 1])
+        for j in range(min(a, b)):
+            if words[i][j] != words[i + 1][j]:
+                j -= 1 # 일치하지 않으면 일치하는 최대 인덱스로 저장 후 break
+                break
+
+        # 일치하는 인덱스 + 1만큼 문자를 입력해야 한다.
+        # 단, 입력하는 문자 수가 단어 길이를 넘지 말아야 한다.
+        result[i] = max(result[i], min(a, j + 2))
+        result[i + 1] = max(result[i + 1], min(b, j + 2))
+
+    # 단어마다 입력해야 하는 문자 수를 합해서 반환
+    return sum(result)
