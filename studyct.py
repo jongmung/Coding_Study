@@ -3314,3 +3314,61 @@ def solution(arrows):
         now = next
 
     return answer
+
+# 행렬과 연산
+# 당신은 행렬에 적용할 수 있는 두 가지 연산을 만들었습니다.
+#   ShiftRow
+#       모든 행이 아래쪽으로 한 칸씩 밀려납니다. 즉, 모든 행에 대해서 i번째 행은 i+1번째 행이 됩니다. (마지막 행은 1번째 행이 됩니다.)
+#   Rotate
+#       행렬의 바깥쪽에 있는 원소들을 시계 방향으로 한 칸 회전시킵니다.
+#       행렬의 바깥쪽에 있는 원소들은 첫 행, 첫 열, 끝 행, 끝 열에 포함되는 원소들입니다.
+#       한 칸 회전시킨다는 것은 이 원소들이 시계 방향으로 한 칸씩 밀려난다는 것을 의미합니다. 즉, 다음 4개의 연산이 동시에 시행됩니다.
+#           첫 행에서 끝 열에 있는 원소를 제외한 첫 행의 모든 원소는 오른쪽으로 한 칸 이동합니다.
+#           끝 열에서 끝 행에 있는 원소를 제외한 끝 열의 모든 원소는 아래쪽으로 한 칸 이동합니다.
+#           끝 행에서 첫 열에 있는 원소를 제외한 끝 행의 모든 원소는 왼쪽으로 한 칸 이동합니다.
+#           첫 열에서 첫 행에 있는 원소를 제외한 첫 열의 모든 원소는 위쪽으로 한 칸 이동합니다.
+# 당신은 행렬에 연산을 여러 번 시행하려고 합니다.
+# 행렬의 초기 상태를 담고 있는 2차원 정수 배열 rc,
+# 시행할 연산을 순서대로 담고 있는 문자열 배열 operations가 매개변수로 주어졌을 때,
+# 연산을 차례대로 시행한 후의 행렬 상태를 return 하도록 solution 함수를 완성해주세요.
+from collections import deque
+def solution(rc, operations):
+    # 행 수, 열 수
+    r_len, c_len = len(rc), len(rc[0])
+    
+    # ShiftRow 연산을 위해 행별로 관리 [양쪽 원소를 제외한 행들, ...]
+    rows = deque(deque(row[1:-1]) for row in rc)
+    # Rotate 연산을 위해 바깥쪽 원소들(열별)을 관리 [첫열, 마지막열]
+    out_cols = [deque(rc[r][0] for r in range(r_len)),
+                deque(rc[r][c_len - 1] for r in range(r_len))]
+
+    # 연산
+    for operation in operations:
+        # ShiftRow 연산
+        if operation[0] == "S":
+            # 마지막(가장 아래) 행을 처음(가장 위)로 이동
+            rows.appendleft(rows.pop())
+            # 첫 열과 마지막 열의 마지막(가장 아래) 원소를 처음(가장 위)으로 이동
+            out_cols[0].appendleft(out_cols[0].pop())
+            out_cols[1].appendleft(out_cols[1].pop())
+        
+        # Rotate 연산
+        else:
+            # << rows가 비어있을 수 있기 때문에 순서 주의 >>
+            # 마지막 열의 마지막(가장 아래) 원소를 마지막 행의 마지막(가장 오른쪽)으로 이동
+            rows[r_len - 1].append(out_cols[1].pop())
+            # 마지막 행의 첫(가장 왼쪽) 원소를 첫 열의 마지막(가장 아래)으로 이동
+            out_cols[0].append(rows[r_len - 1].popleft())
+            # 첫 열의 첫(가장 위) 원소를 첫 행의 처음(가장 왼쪽)으로 이동
+            rows[0].appendleft(out_cols[0].popleft())
+            # 첫 행의 마지막(가장 오른쪽) 원소를 마지막 열의 처음(가장 위)으로 이동
+            out_cols[1].appendleft(rows[0].pop())
+            
+    answer = []
+    for r in range(r_len):
+        answer.append([])
+        answer[r].append(out_cols[0][r])
+        answer[r].extend(rows[r])
+        answer[r].append(out_cols[1][r]) 
+    
+    return answer
