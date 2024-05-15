@@ -3372,3 +3372,46 @@ def solution(rc, operations):
         answer[r].append(out_cols[1][r]) 
     
     return answer
+
+# 가사검색
+# 친구들로부터 천재 프로그래머로 불리는 "프로도"는 음악을 하는 친구로부터 자신이 좋아하는 노래 가사에
+# 사용된 단어들 중에 특정 키워드가 몇 개 포함되어 있는지 궁금하니 프로그램으로 개발해 달라는 제안을 받았습니다.
+# 그 제안 사항 중, 키워드는 와일드카드 문자중 하나인 '?'가 포함된 패턴 형태의 문자열을 뜻합니다.
+# 와일드카드 문자인 '?'는 글자 하나를 의미하며, 어떤 문자에도 매치된다고 가정합니다.
+#   예를 들어 "fro??"는 "frodo", "front", "frost" 등에 매치되지만 "frame", "frozen"에는 매치되지 않습니다.
+# 가사에 사용된 모든 단어들이 담긴 배열 words와 찾고자 하는 키워드가 담긴 배열 queries가 주어질 때,
+# 각 키워드 별로 매치된 단어가 몇 개인지 순서대로 배열에 담아 반환하도록 solution 함수를 완성해 주세요.
+from bisect import bisect_left,bisect_right
+def solution(words, queries):
+    answer = []
+    # 같은 길이의 단어끼리 모으기
+    w = [[] for _ in range(10001)]
+    reverse_w = [[] for _ in range(10001)]
+    for word in words:
+        w[len(word)].append(word)
+        reverse_w[len(word)].append(word[::-1])
+        
+    # 정렬
+    for i in range(10001):
+        w[i].sort()
+        reverse_w[i].sort()
+            
+    for q in queries:
+        # 이분 탐색을 통해 범위 구하기
+        # froaa <= fro?? <= frozz
+        # ????o : oaaaa <= o???? <= ozzzz
+        qA = q.replace('?','a')
+        qZ = q.replace('?','z')
+        
+        # ?가 접두사에 있는가? -> 단어를 뒤집어서 범위 구하기
+        if q[0] == '?':
+            s = bisect_left(reverse_w[len(q)],qA[::-1])
+            e = bisect_right(reverse_w[len(q)],qZ[::-1])
+            answer.append(e-s)
+        # ?가 접미사에 있는가?
+        else:
+            s = bisect_left(w[len(q)],qA)
+            e = bisect_right(w[len(q)],qZ)
+            answer.append(e-s)
+    
+    return answer
