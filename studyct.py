@@ -3415,3 +3415,47 @@ def solution(words, queries):
             answer.append(e-s)
     
     return answer
+
+# 고고학 최고의 발견
+# 퍼즐은 시계들이 행렬을 이루는 구조물인데 하나의 시계에 시곗바늘은 하나씩만 있습니다.
+# 각 시곗바늘은 시계방향으로만 돌릴 수 있고 한 번의 조작으로 90도씩 돌릴 수 있습니다.
+# 시계들은 기계장치에 의해 연결되어 있어 어떤 시계의 시곗바늘을 돌리면 그 시계의 상하좌우로 인접한 시계들의 시곗바늘도 함께 돌아갑니다.
+# 행렬의 모서리에 위치한 시계의 시곗바늘을 돌리는 경우에는 인접한 세 시계의 시곗바늘들이 함께 돌아가며,
+# 꼭짓점에 위치한 시계의 시곗바늘을 돌리는 경우에는 인접한 두 시계의 시곗바늘들이 함께 돌아갑니다.
+# 각 시계는 12시, 3시, 6시, 9시 방향 중의 한 방향을 가리키고 있습니다.
+# 각 시계의 시곗바늘을 적절히 조작하여 모든 시곗바늘이 12시 방향을 가리키면 퍼즐이 해결되어 성궤를 봉인하고 있는 잠금장치가 열릴 것입니다.
+# 노후화된 퍼즐 기계장치가 걱정되었던 혜선은 가능한 최소한의 조작으로 퍼즐을 해결하려고 합니다.
+# 시곗바늘들의 행렬 clockHands가 매개변수로 주어질 때, 퍼즐을 해결하기 위한 최소한의 조작 횟수를 return 하도록 solution 함수를 완성해주세요.
+from itertools import product
+def solution(clockHands):
+    answer = 9876543210
+    n = len(clockHands)
+    dy = [-1, 1, 0, 0, 0]
+    dx = [0, 0, -1, 1, 0]
+
+    def rotate(a, b, t, arr):
+        for k in range(5):
+            y, x = a + dy[k], b + dx[k]
+            if 0 <= y < n and 0 <= x < n:
+                arr[y][x] = (arr[y][x] + t) % 4
+
+    for case in product(range(4), repeat=n):    # 첫째줄 최대4번까지 회전 한다는 가정 하에 모든 경우의 수를 만든다.
+        arr = [i[:] for i in clockHands]    # 깊은 복사는 deepcopy 보다 slicing 이 빠름
+
+        for j in range(n):    # case 를 가지고 첫번째 줄만 회전 시킨다
+            rotate(0, j, case[j], arr)
+
+        result = sum(case)    # 첫번째 줄 조작 횟수의 합
+
+        for i in range(1, n):    # 두번째 줄부터 체크
+            for j in range(n):
+                if arr[i-1][j]:    # 12시 가있지 않은 시계만 조작
+                    temp = 4 - arr[i-1][j]    # 12시에 가도록 하기 위한 조작 횟수
+                    rotate(i, j, temp, arr)    # 회전
+                    result += temp    # 조작 횟수 누적
+
+        if sum(arr[n-1]):    # 마지막 라인에 12시를 향하지 않는 시계가 존재
+            continue    # pass
+        answer = min(answer, result)    # 시계가 모두 12시를 가리킨다면 answer을 최솟값으로 갱신
+
+    return answer
