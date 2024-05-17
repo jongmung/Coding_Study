@@ -3459,3 +3459,27 @@ def solution(clockHands):
         answer = min(answer, result)    # 시계가 모두 12시를 가리킨다면 answer을 최솟값으로 갱신
 
     return answer
+
+# 짝수 행 세기
+# 모든 수가 0 또는 1로 이루어진 2차원 배열 a가 주어집니다.
+# 다음 조건을 모두 만족하는 2차원 배열 b의 경우의 수를 (107 + 19)로 나눈 나머지를 return 하도록 solution 함수를 완성해주세요.
+#   b의 모든 원소는 0 아니면 1입니다.
+#   a의 행/열의 개수와 b의 행/열의 개수가 같습니다. (= a와 b의 크기가 같습니다.)
+#   i = 1, 2, ..., (a의 열의 개수)에 대해서 a의 i번째 열과 b의 i번째 열에 들어 있는 1의 개수가 같습니다.
+#   b의 각 행에 들어 있는 1의 개수가 짝수입니다. (0도 짝수입니다.)
+from collections import defaultdict
+from math import comb
+from functools import lru_cache
+@lru_cache(maxsize=None)
+def C(n,k): return comb(n,k)
+def solution(a):
+    one_cnt = [sum(ones) for ones in zip(*a)] # 각열 1의 갯수
+    DP = defaultdict(int,{(rows := len(a))-one_cnt[0]:comb(rows, one_cnt[0])}) # 1열까지 계산한 DP
+    for ones in one_cnt[1:]: # DP[2][j] 부터 계산
+        next_DP = defaultdict(int)
+        for even_rows in DP:
+            odd_rows = rows-even_rows
+            for add_one in range(max(0,ones-odd_rows), min(ones,even_rows)+1): # range 범위는 미만이기때문에 +1
+                next_DP[even_rows+ones-2*add_one] += DP[even_rows] * C(even_rows, add_one) * C(odd_rows, ones-add_one)%(10**7+19)
+        DP = next_DP
+    return DP[rows]
