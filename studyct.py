@@ -3483,3 +3483,32 @@ def solution(a):
                 next_DP[even_rows+ones-2*add_one] += DP[even_rows] * C(even_rows, add_one) * C(odd_rows, ones-add_one)%(10**7+19)
         DP = next_DP
     return DP[rows]
+
+# 아방가르드 타일링
+# 정우는 예술적 감각이 뛰어난 타일공입니다.
+# 그는 단순한 타일을 활용하여 불규칙하면서도 화려하게 타일링을 하곤 합니다.
+# 어느 날 정우는 가로 길이 n, 세로 길이 3 인 판을 타일링하는 의뢰를 맡았습니다.
+# 아방가르드한 디자인 영감이 떠오른 정우는 다음과 같은 두 가지 종류의 타일로 타일링을 하기로 결정했습니다.
+# 타일
+#       ㅇ
+#  ㅇㅇ  ㅇ
+#  ㅇ   ㅇ
+# 각 타일은 90도씩 회전할 수 있으며 타일의 개수는 제한이 없습니다.
+# n이 주어졌을 때, 이 두 가지 종류의 타일로 n x 3 크기의 판을 타일링하는 방법의 수를 return 하도록 solution 함수를 완성해주세요.
+def solution(n):
+    dp = [1,1,3,10] + [0]*(n-3)
+    sp_c2, sp_c3 = 2, 5
+    sp_cases = [12, 2, 4] #각각 6, 4, 5 일 때 초기에 더해지는 값들
+    if n <= 3 : return dp[n]
+    for idx in range(4,n+1):
+        sp_c = idx%3
+        total = sp_cases[sp_c]
+        
+        total += dp[idx-1] + sp_c2*dp[idx-2] + sp_c3*dp[idx-3]
+        dp[idx] = total
+        
+        sp_cases[sp_c] += dp[idx-1]*2 + dp[idx-2]*2 + dp[idx-3]*4
+        
+    answer = dp[n]%1000000007
+    
+    return answer
