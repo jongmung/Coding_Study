@@ -3549,3 +3549,88 @@ def solution(n, count):
     # 정리하면
     # cache[i][j] = cache[i-1][j-1] + cache[i-1][j] * 2*(i-1)
     return solve(n, count)
+
+# 표 병합
+# 당신은 표 편집 프로그램을 작성하고 있습니다.
+# 표의 크기는 50 × 50으로 고정되어있고 초기에 모든 셀은 비어 있습니다.
+# 각 셀은 문자열 값을 가질 수 있고, 다른 셀과 병합될 수 있습니다.
+# 위에서 r번째, 왼쪽에서 c번째 위치를 (r, c)라고 표현할 때, 당신은 다음 명령어들에 대한 기능을 구현하려고 합니다.
+#   "UPDATE r c value"
+#       (r, c) 위치의 셀을 선택합니다.
+#       선택한 셀의 값을 value로 바꿉니다.
+#   "UPDATE value1 value2"
+#       value1을 값으로 가지고 있는 모든 셀을 선택합니다.
+#       선택한 셀의 값을 value2로 바꿉니다.
+#   "MERGE r1 c1 r2 c2"
+#       (r1, c1) 위치의 셀과 (r2, c2) 위치의 셀을 선택하여 병합합니다.
+#       선택한 두 위치의 셀이 같은 셀일 경우 무시합니다.
+#       선택한 두 셀은 서로 인접하지 않을 수도 있습니다.
+#           이 경우 (r1, c1) 위치의 셀과 (r2, c2) 위치의 셀만 영향을 받으며, 그 사이에 위치한 셀들은 영향을 받지 않습니다.
+#       두 셀 중 한 셀이 값을 가지고 있을 경우 병합된 셀은 그 값을 가지게 됩니다.
+#       두 셀 모두 값을 가지고 있을 경우 병합된 셀은 (r1, c1) 위치의 셀 값을 가지게 됩니다.
+#       이후 (r1, c1) 와 (r2, c2) 중 어느 위치를 선택하여도 병합된 셀로 접근합니다.
+#   "UNMERGE r c"
+#       (r, c) 위치의 셀을 선택하여 해당 셀의 모든 병합을 해제합니다.
+#       선택한 셀이 포함하고 있던 모든 셀은 프로그램 실행 초기의 상태로 돌아갑니다.
+#       병합을 해제하기 전 셀이 값을 가지고 있었을 경우 (r, c) 위치의 셀이 그 값을 가지게 됩니다.
+#   "PRINT r c"
+#       (r, c) 위치의 셀을 선택하여 셀의 값을 출력합니다.
+#       선택한 셀이 비어있을 경우 "EMPTY"를 출력합니다.
+# 실행할 명령어들이 담긴 1차원 문자열 배열 commands가 매개변수로 주어집니다.
+# commands의 명령어들을 순서대로 실행하였을 때, "PRINT r c" 명령어에 대한 실행결과를 순서대로
+# 1차원 문자열 배열에 담아 return 하도록 solution 함수를 완성해주세요.
+def solution(commands):
+    answer = []  # 결과를 저장할 리스트
+    cell = [['EMPTY' for _ in range(51)] for _ in range(51)]  # 'EMPTY'로 초기화
+    pointer = [[[i, j] for j in range(51)] for i in range(51)]  # 자기 자신을 가리키도록 초기화 
+    
+    def insert(r, c, value):
+        rr, cc = pointer[r][c]  # 포인터에서 실제 위치(rr, cc) 가져옴
+        cell[rr][cc] = value
+        
+    def update(value1, value2):
+        for i in range(51):
+            for j in range(51):
+                if cell[i][j] == value1:
+                    cell[i][j] = value2
+                    
+    def merge(r1, c1, r2, c2):
+        rr1, cc1 = pointer[r1][c1]  # 1번 셀의 실제 위치
+        rr2, cc2 = pointer[r2][c2]  # 2번 셀의 실제 위치
+        value1, value2 = [cell[rr1][cc1], cell[rr2][cc2]]  # 각 셀 값을 가져옴
+        cell[rr1][cc1] = value2 if value1 == 'EMPTY' else value1  # 값 변경
+        for i in range(51):
+            for j in range(51):
+                if pointer[i][j] == [rr2, cc2]: # 2번 셀의 포인터를 1번 셀의 위치로 변경
+                    pointer[i][j] = [rr1, cc1]  
+        
+    def unmerge(r, c):
+        rr, cc = pointer[r][c]  # 실제 위치 가져옴
+        value = cell[rr][cc]  # 셀 값 가져옴
+        for i in range(51):
+            for j in range(51):
+                if pointer[i][j] == [rr, cc]:
+                    pointer[i][j] = [i, j]  # 포인터 초기화
+                    cell[i][j] = 'EMPTY'  # 값 초기화
+        cell[r][c] = value  # 원래 위치의 셀 값을 복원
+        
+    def pprint(r, c):
+        rr, cc = pointer[r][c]  # 포인터에서 실제 위치(rr, cc) 가져옴
+        answer.append(cell[rr][cc])  # 셀 값 결과 리스트에 추가
+        
+    # 메인 루프
+    for i in commands:
+        a = i.split(' ')  # 공백을 기준으로 커맨드와 인자들을 분리
+        if a[0] == 'UPDATE':
+            if len(a) == 4:
+                insert(int(a[1]), int(a[2]), a[3]) 
+            else:
+                update(a[1], a[2]) 
+        elif a[0] == 'MERGE':
+            merge(int(a[1]), int(a[2]), int(a[3]), int(a[4]))  
+        elif a[0] == 'UNMERGE':
+            unmerge(int(a[1]), int(a[2]))  
+        else:
+            pprint(int(a[1]), int(a[2]))  
+            
+    return answer
