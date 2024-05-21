@@ -3634,3 +3634,59 @@ def solution(commands):
             pprint(int(a[1]), int(a[2]))  
             
     return answer
+
+# 상담원 인원
+# 현대모비스는 우수한 SW 인재 채용을 위해 상시로 채용 설명회를 진행하고 있습니다.
+# 채용 설명회에서는 채용과 관련된 상담을 원하는 참가자에게 멘토와 1:1로 상담할 수 있는 기회를 제공합니다.
+# 채용 설명회에는 멘토 n명이 있으며, 1~k번으로 분류되는 상담 유형이 있습니다. 각 멘토는 k개의 상담 유형 중 하나만 담당할 수 있습니다.
+# 멘토는 자신이 담당하는 유형의 상담만 가능하며, 다른 유형의 상담은 불가능합니다.
+# 멘토는 동시에 참가자 한 명과만 상담 가능하며, 상담 시간은 정확히 참가자가 요청한 시간만큼 걸립니다.
+# 참가자가 상담 요청을 하면 아래와 같은 규칙대로 상담을 진행합니다.
+#   상담을 원하는 참가자가 상담 요청을 했을 때, 참가자의 상담 유형을 담당하는 멘토 중 상담 중이 아닌 멘토와 상담을 시작합니다.
+#   만약 참가자의 상담 유형을 담당하는 멘토가 모두 상담 중이라면, 자신의 차례가 올 때까지 기다립니다.
+#       참가자가 기다린 시간은 참가자가 상담 요청했을 때부터 멘토와 상담을 시작할 때까지의 시간입니다.
+#   모든 멘토는 상담이 끝났을 때 자신의 상담 유형의 상담을 받기 위해 기다리고 있는 참가자가 있으면 즉시 상담을 시작합니다.
+#       이때, 먼저 상담 요청한 참가자가 우선됩니다.
+#   참가자의 상담 요청 정보가 주어질 때, 참가자가 상담을 요청했을 때부터 상담을 시작하기까지 기다린 시간의 합이 최소가 되도록 각 상담 유형별로 멘토 인원을 정하려 합니다.
+# 단, 각 유형별로 멘토 인원이 적어도 한 명 이상이어야 합니다.
+# 상담 유형의 수를 나타내는 정수 k, 멘토의 수를 나타내는 정수 n과 참가자의 상담 요청을 담은 2차원 정수 배열 reqs가 매개변수로 주어집니다.
+# 멘토 인원을 적절히 배정했을 때 참가자들이 상담을 받기까지 기다린 시간을 모두 합한 값의 최솟값을 return 하도록 solution 함수를 완성해 주세요.
+from collections import Counter, defaultdict
+from itertools import combinations_with_replacement
+def solution(k, n, reqs):
+    # 큰 수
+    answer = 999999999
+    # 중복조합
+    comb = combinations_with_replacement([i for i in range(k)], r=n-k)
+    # 상담원-유형 케이스목록 구하기
+    cases = []
+    for case in comb:
+        base = [1 for i in range(k)]
+        for c in case:
+            base[c] += 1
+        cases.append(base)
+    # 참가자 데이터 가공 문제유형 : [시작시간, 종료시간]
+    participants = defaultdict(list)
+    for start_time, minutes, category in reqs:
+        participants[category].append([start_time, start_time + minutes])
+    # 각 케이스에 대해 wait_time을 구하고 최소값 찾기
+    for case in cases:
+        wait_time = 0 
+        # 각 유형에 대해  wait_time 계산하여 더하기
+        for i in range(k):
+            p_list = sorted(participants[i+1], key=lambda x:x[0])
+            mento_list = [0 for _ in range(case[i])]
+            for start_time, end_time in p_list:
+                mento_list = sorted(mento_list)
+                if mento_list[0] <= start_time:
+                    mento_list[0] = end_time
+                else:
+                    temp_t = mento_list[0] - start_time
+                    mento_list[0] = end_time + temp_t
+                    wait_time += temp_t
+            #수행 중 만약 현재 최소값보다 길어지면 break
+            if wait_time > answer:
+                break
+        if wait_time < answer:
+            answer = wait_time
+    return answer
