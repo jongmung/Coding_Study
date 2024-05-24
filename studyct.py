@@ -3797,3 +3797,18 @@ def solution(a, s):
         answer.append( solve(b) )
         start += l
     return answer
+
+# 단어 퍼즐
+# 단어 퍼즐은 주어진 단어 조각들을 이용해서 주어진 문장을 완성하는 퍼즐입니다.
+# 이때, 주어진 각 단어 조각들은 각각 무한개씩 있다고 가정합니다.
+# 사용 가능한 단어 조각들을 담고 있는 배열 strs와 완성해야 하는 문자열 t가 매개변수로 주어질 때,
+# 주어진 문장을 완성하기 위해 사용해야 하는 단어조각 개수의 최솟값을 return 하도록 solution 함수를 완성해 주세요. 
+# 만약 주어진 문장을 완성하는 것이 불가능하면 -1을 return 하세요.
+def solution(strs, t):
+    INF = 99999
+    dp = [INF] * len(t) + [0]
+    for i in range(len(t)-1, -1, -1):
+        for j in range(1, min(6, len(t)-i+1)):
+            if t[i:i+j] in strs:
+                dp[i] = min(dp[i], dp[i+j]+1)
+    return -1 if dp[0]==INF else dp[0]
