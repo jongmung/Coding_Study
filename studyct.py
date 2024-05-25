@@ -3812,3 +3812,39 @@ def solution(strs, t):
             if t[i:i+j] in strs:
                 dp[i] = min(dp[i], dp[i+j]+1)
     return -1 if dp[0]==INF else dp[0]
+
+# 지형 편집
+# XX 게임에서는 지형 편집 기능을 이용하여 플레이어가 직접 게임 속 지형을 수정할 수 있습니다. 
+# 이 게임에서는 1 x 1 x 1 크기의 정육면체 블록을 쌓아 게임 속 지형을 표현합니다.
+# 이때, 블록이 공중에 떠 있거나, 블록 하나가 여러 개의 칸에 걸쳐 놓일 수는 없습니다. 
+# 따라서 지형을 편집하기 위해서는 각 칸의 제일 위에 블록 1개를 새로 추가하거나,
+# 제일 위에 있는 블록 한 개를 삭제하는 방식으로 지형을 수정해야 합니다. 
+# 이때, 블록 한 개를 새로 추가하거나 삭제하기 위해서는 게임머니를 사용해야 하므로 몇 개의 블록을 추가하고 삭제할지 신중한 선택이 필요합니다.
+# 이 게임을 즐기던 한 플레이어는 N x N 크기의 지역에 자신만의 별장을 만들고 싶어졌습니다. 
+# 이를 위해서는 울퉁불퉁한 지형의 모든 칸의 높이가 같아지도록 만들어야 합니다.
+# 이때, 블록 한 개를 추가하려면 P의 비용이, 제거하려면 Q의 비용이 들게 됩니다.
+# 현재 지형의 상태를 나타내는 배열 land와 블록 한 개를 추가하는 데 필요한 비용 P,
+# 블록 한 개를 제거하는 데 필요한 비용 Q가 매개변수로 주어질 때,
+# 모든 칸에 쌓여있는 블록의 높이가 같아지도록 하는 데 필요한 비용의 최솟값을 return 하도록 solution 함수를 완성해 주세요.
+from itertools import chain
+def solution(land, P, Q):
+    # 일렬로 세우기
+    line = list(chain.from_iterable(land))
+    line.sort()
+    # print(line)
+    n = len(line)
+
+    # 가장 낮은 층으로 편집 (무조건 0이 아니라 가지고 있는 층중에 맨 밑)
+    # 가장 낮은 층은 지형이 다 있으므로 그 위의 블록을 모두 제거하면 된다.
+    cost = (sum(line) - line[0] * n) * Q
+    answer = cost
+
+    # 한층씩 쌓기
+    for i in range(1, n):
+        if line[i] != line[i - 1]:
+            # print(f'cost: {cost}, line[i-1]: {line[i - 1]}, line[i]: {line[i]} ')
+            cost = cost + ((line[i] - line[i - 1]) * i * P) - ((line[i] - line[i - 1]) * (n - i) * Q)
+            if answer < cost:  # 시간 단축 - 변곡점
+                break
+            answer = min(answer, cost)
+    return answer
