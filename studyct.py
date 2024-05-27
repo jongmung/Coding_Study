@@ -3898,3 +3898,60 @@ def solution(arr):
             m[(i, j)] = min(mincandidates)
                     
     return M[(0, len(nums) - 1)]
+
+# 동굴 탐험
+# 오지 탐험가인 프로도는 탐험 도중 n개의 방으로 이루어진 지하 동굴을 탐험하게 되었습니다. 모든 방에는 0부터 n - 1 까지 번호가 붙어있고,
+# 이 동굴에 들어갈 수 있는 유일한 입구는 0번 방과 연결되어 있습니다.
+# 각 방들은 양방향으로 통행이 가능한 통로로 서로 연결되어 있는데, 서로 다른 두 방을 직접 연결하는 통로는 오직 하나입니다.
+# 임의의 서로 다른 두 방 사이의 최단경로는 딱 한 가지만 있으며, 또한 임의의 두 방 사이에 이동이 불가능한 경우는 없습니다.
+# 탐험에 앞서 이 지하 동굴의 지도를 손에 넣은 프로도는 다음과 같이 탐험 계획을 세웠습니다.
+#   모든 방을 적어도 한 번은 방문해야 합니다.
+#   특정 방은 방문하기 전에 반드시 먼저 방문할 방이 정해져 있습니다.
+#       2-1. 이는 A번 방은 방문하기 전에 반드시 B번 방을 먼저 방문해야 한다는 의미입니다.
+#       2-2. 어떤 방을 방문하기 위해 반드시 먼저 방문해야 하는 방은 없거나 또는 1개 입니다.
+#       2-3. 서로 다른 두 개 이상의 방에 대해 먼저 방문해야 하는 방이 같은 경우는 없습니다.
+#       2-4. 어떤 방이 먼저 방문해야 하는 방이면서 동시에 나중에 방문해야 되는 방인 경우는 없습니다.
+# 위 계획 중 2-2, 2-3, 2-4는 순서를 지켜 방문해야 하는 두 방의 쌍이 A → B(A를 먼저 방문하고 B를 방문함) 형태로 유일함을 의미합니다.
+# 즉, 프로도는 아래와 같은 형태로 방문순서가 잡히지 않도록 방문 계획을 세웠습니다.
+#   A → B, A → C (방문순서 배열 order = [...,[A,B],...,[A,C],...]) 형태로 A를 방문 후에 방문해야 할 방이 B와 C로 두 개 또는 그 이상인 경우
+#   X → A, Z → A (방문순서 배열 order = [...,[X,A],...,[Z,A],...]) 형태로 A를 방문하기 전에 방문해야 할 방이 X와 Z로 두 개 또는 그 이상인 경우
+#   A → B → C (방문순서 배열 order = [...,[A,B],...,[B,C],...) 형태로 B처럼 A 방문 후이면서 동시에 C 방문 전인 경우
+# 그리고 먼저 방문해야 할 방과 나중에 방문할 방을 반드시 연속해서 방문해야 할 필요는 없어 A방을 방문한 후 다른 방을 방문한 후 B방을 방문해도 좋습니다.
+# 방 개수 n, 동굴의 각 통로들이 연결하는 두 방의 번호가 담긴 2차원 배열 path, 프로도가 정한 방문 순서가 담긴 2차원 배열 order가 매개변수로 주어질 때,
+# 프로도가 규칙에 맞게 모든 방을 탐험할 수 있을 지 return 하도록 solution 함수를 완성해주세요.
+from collections import defaultdict
+def solution(n, path, order):
+    adj = [[] for _ in range(n)]
+    visited = [False for _ in range(n)]
+    for a,b in path:
+        adj[a].append(b)
+        adj[b].append(a)
+    
+    parent = defaultdict(int) # 0으로 default, key가 자식, value가 부모
+    child = defaultdict(int) # key가 부모, value가 자식
+    
+    for o in order:
+        parent[o[1]] = o[0] # key로 가기전에 value 먼저 가야함
+    if 0 in parent.keys(): #0가기전에 어디들러야하면 안됨. 입구는 0뿐!
+        return False
+    stk = [0] # DFS로 풀어보장, 입구는 항상 0임
+    while stk:
+        curr = stk.pop()
+        if curr in parent.keys() and not visited[parent[curr]]: # nxt부모있는데 부모는 방문안했다면 킵해놔야함. 부모가 방문할때 같이 처리해놓을거니까 키를 부모로 해놔야 찾기편함.
+            child[parent[curr]] = curr
+            continue #밑에 안하고 넘어감
+        
+        # 부모가 없거나 부모 이미 방문했음 이 아이도 방문 ok
+        visited[curr] = True
+        
+        for nxt in adj[curr]:
+            if not visited[nxt]:
+                stk.append(nxt)
+                
+        # 자식 있는 경우? 이제 방문해도됨
+        if curr in child.keys():
+            stk.append(child[curr])
+  
+    if False in visited: 
+        return False
+    else: return True
