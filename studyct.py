@@ -4035,3 +4035,99 @@ def solution(n, edges):
         # 지름이 1개면 지름에서 가까운 노드를 선택하기 때문에 -1을 해준다
         else:
             return temp3[0]-1
+        
+# 블록 게임
+# 아래 그림과 같이 1×1 크기의 블록을 이어 붙여 만든 3 종류의 블록을 회전해서 총 12가지 모양의 블록을 만들 수 있다.
+# 1 x 1 크기의 정사각형으로 이루어진 N x N 크기의 보드 위에 이 블록들이 배치된 채로 게임이 시작된다. (보드 위에 놓인 블록은 회전할 수 없다).
+# 모든 블록은 블록을 구성하는 사각형들이 정확히 보드 위의 사각형에 맞도록 놓여있으며, 선 위에 걸치거나 보드를 벗어나게 놓여있는 경우는 없다.
+# 플레이어는 위쪽에서 1 x 1 크기의 검은 블록을 떨어뜨려 쌓을 수 있다. 검은 블록은 항상 맵의 한 칸에 꽉 차게 떨어뜨려야 하며, 줄에 걸치면 안된다.
+# 이때, 검은 블록과 기존에 놓인 블록을 합해 속이 꽉 채워진 직사각형을 만들 수 있다면 그 블록을 없앨 수 있다.
+# 보드 위에 놓인 블록의 상태가 담긴 2차원 배열 board가 주어질 때, 검은 블록을 떨어뜨려 없앨 수 있는 블록 개수의 최댓값을 구하라.
+from collections import deque
+
+# 없앨 수 있는 블록의 좌표 (0, 0) 기준, 비교시 좌표순서에 상관없도록 set자료형
+BLOCKS = [
+    {(0, 0), (1, 0), (1, 1), (1, 2)},   # 빨간색 블록3
+    {(0, 1), (1, 1), (2, 0), (2, 1)},   # 빨간색 블록4
+    {(0, 0), (1, 0), (2, 0), (2, 1)},   # 주황색 블록2
+    {(0, 2), (1, 0), (1, 1), (1, 2)},   # 주황색 블록3
+    {(0, 1), (1, 0), (1, 1), (1, 2)},   # 하늘색 블록1
+]
+
+# 한 덩어리의 블록에 대한 좌표 탐색
+def BFS(sx, sy, visited, board):
+    n = len(visited)            # N x N 정방행렬
+    dx = [-1, 1, 0, 0]          # 상하좌우순
+    dy = [0, 0, -1, 1]          # 상하좌우순
+    visited[sx][sy] = True      # 시작좌표 방문처리
+    
+    block = [[sx, sy]]          # 블록좌표에 시작좌표 추가
+    block_type = board[sx][sy]  # 현재블록타입
+    queue = deque([(sx, sy)])   # 시작좌표 queue 삽입
+    while queue:
+        x, y = queue.popleft()  # 현재좌표
+        for i in range(4):
+            nx = x + dx[i]
+            ny = y + dy[i]
+            if 0 <= nx < n and 0 <= ny < n and not visited[nx][ny]:
+                if board[nx][ny] == block_type: # 다음좌표가 현재블록타입과 같다면
+                    visited[nx][ny] = True      # 다음좌표 방문처리
+                    block.append([nx, ny])      # 다음좌표 블록좌표에 추가
+                    queue.append((nx, ny))      # 다음좌표 queue 삽입
+    return block
+
+def is_possible_remove(block, board):
+    # (0, 0) 기준으로 평행이동
+    minX = min([x for x, y in block])
+    minY = min([y for x, y in block])
+    standard_block = set([(x - minX, y - minY) for x, y in block])
+    
+    # 평행이동한 블록이 삭제가능한 블록이고, 위쪽에 가린 블록이 없으면 return True
+    if standard_block in BLOCKS:
+        if not is_blind_above(block, board):
+            return True
+    return False
+
+def is_blind_above(block, board):
+    # 삭제가능한 블록에 대해, 위쪽을 가리지 않아야하는 좌표조건은
+    # 높이가 1인 [x, y]좌표 = y가 1개인 [x, y] 좌표
+    blockYs = [y for x, y in block]     # 현재블록의 y좌표들
+    check_block = [[x, y] for x, y in block if blockYs.count(y) == 1]
+    
+    for x, y in check_block:        # 확인해야하는 y좌표에 대해
+        x -= 1                      # 현재 블록의 위쪽칸부터
+        while 0 <= x:               # board의 맨 위쪽까지 확인
+            if 0 != board[x][y]:    # 다른 블록이 존재하면
+                return True         # return True = is blind
+            x -= 1                  # x 감소 = 윗 칸으로 이동
+    return False            # return False = is not blind
+        
+def remove_block(block, board):
+    for x, y in block:
+        board[x][y] = 0
+
+# 한 차례 보드를 완전탐색하며 삭제가능한 블록개수 탐색
+def check_board(board):
+    n = len(board)
+    visited = [[False] * n for _ in range(n)]
+    result = 0
+    for row in range(n):
+        for col in range(n):
+            # 블록이 존재하고, 방문한적이 없으면
+            if board[row][col] != 0 and not visited[row][col]:
+                block = BFS(row, col, visited, board)   # 현재 블록 덩어리 탐색
+                if is_possible_remove(block, board):    # 현재 블록 덩어리가 삭제가능하다면
+                    result += 1                         # 삭제 가능한 블록개수 증가
+                    remove_block(block, board)          # 현재 블록 덩어리 삭제
+    return result
+    
+def solution(board):
+    answer = 0
+    remove_block_cnt = -1
+    
+    # 처음엔 삭제불가능했으나, 다른 블록이 삭제되면서 나중에 삭제가능해지는 경우가 있으므로
+    while remove_block_cnt != 0:                # 더 이상 삭제가능한 블록이 없을 때까지
+        remove_block_cnt = check_board(board)   # 한 차례 보드를 완전탐색하며 삭제가능한 블록 탐색
+        answer += remove_block_cnt              # 삭제 가능한 블록 합산
+    
+    return answer
