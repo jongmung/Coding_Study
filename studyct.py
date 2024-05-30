@@ -4131,3 +4131,71 @@ def solution(board):
         answer += remove_block_cnt              # 삭제 가능한 블록 합산
     
     return answer
+
+# 숫자 타자 대회
+# 위와 같은 모양으로 배열된 숫자 자판이 있습니다. 숫자 타자 대회는 이 동일한 자판을 사용하여
+# 숫자로만 이루어진 긴 문자열을 누가 가장 빠르게 타이핑하는지 겨루는 대회입니다.
+# 대회에 참가하려는 민희는 두 엄지 손가락을 이용하여 타이핑을 합니다.
+# 민희는 항상 왼손 엄지를 4 위에,오른손 엄지를 6 위에 두고 타이핑을 시작합니다.
+# 엄지 손가락을 움직여 다음 숫자를 누르는 데에는 일정 시간이 듭니다.
+# 민희는 어떤 두 숫자를 연속으로 입력하는 시간 비용을 몇몇 가중치로 분류하였습니다.
+#   이동하지 않고 제자리에서 다시 누르는 것은 가중치가 1입니다.
+#   상하좌우로 인접한 숫자로 이동하여 누르는 것은 가중치가 2입니다.
+#   대각선으로 인접한 숫자로 이동하여 누르는 것은 가중치가 3입니다.
+#   같지 않고 인접하지 않은 숫자를 누를 때는 위 규칙에 따라 가중치 합이 최소가 되는 경로를 따릅니다.
+# 숫자로 이루어진 문자열 numbers가 주어졌을 때 최소한의 시간으로 타이핑을 하는 경우의 가중치 합을 return 하도록 solution 함수를 완성해주세요.
+from collections import deque
+def solution(numbers):
+    answer = 0
+    m = {}
+    # 가중치 map
+    m['0'] = [1, 7, 6, 7, 5, 4, 5, 3, 2, 3]
+    m['1'] = [7, 1, 2, 4, 2, 3, 5, 4, 5, 6]
+    m['2'] = [6, 2, 1, 2, 3, 2, 3, 5, 4, 5]
+    m['3'] = [7, 4, 2, 1, 5, 3, 2, 6, 5, 4]
+    m['4'] = [5, 2, 3, 5, 1, 2, 4, 2, 3, 5]
+    m['5'] = [4, 3, 2, 3, 2, 1, 2, 3, 2, 3]
+    m['6'] = [5, 5, 3, 2, 4, 2, 1, 5, 3, 2]
+    m['7'] = [3, 4, 5, 6, 2, 3, 5, 1, 2, 4]
+    m['8'] = [2, 5, 4, 5, 3, 2, 3, 2, 1, 2]
+    m['9'] = [3, 6, 5, 4, 5, 3, 2, 4, 2, 1]
+    
+    # 위치랑 쌓인 가중치
+    #(왼쪽,오른쪽,가중치)
+    q = deque()
+    # 경우의 수, 가중치 저장
+    dic = {}
+    dic[('4','6')] = 0
+    
+    for i in range(len(numbers)):
+        n = numbers[i]
+        now_dic = {}
+        
+        for lp,rp in dic.keys():
+            q.append((lp,rp,dic[(lp,rp)]))
+        
+        while q:
+            l,r,c = q.popleft()
+            l_cnt = m[l][int(n)]
+            r_cnt = m[r][int(n)]
+            
+            if l == n:
+                # 왼쪽이 움직이고, 가중치 +1
+                if (n,r) not in now_dic.keys() or now_dic[(n,r)] > c + 1:
+                    now_dic[(n,r)] = c + 1
+            elif r == n:
+                # 오른쪽이 움직이고, 가중치 +1
+                if (l,n) not in now_dic.keys()  or now_dic[(l,n)] > c + 1:
+                    now_dic[(l,n)] = c + 1
+                    
+            else:
+                # 왼쪽 움직였을 때
+                if (n,r) not in now_dic.keys() or now_dic[(n,r)] > c + l_cnt:
+                    now_dic[(n,r)] = c + l_cnt
+                # 오른쪽 움직였을 때
+                if (l,n) not in now_dic.keys() or now_dic[(l,n)] > c + r_cnt:
+                    now_dic[(l,n)] = c + r_cnt
+        # 기록 갱신
+        dic = now_dic
+    
+    return min(dic.values())
