@@ -4199,3 +4199,93 @@ def solution(numbers):
         dic = now_dic
     
     return min(dic.values())
+
+# 1,2,3 떨어트리기
+# 춘식이는 트리의 1번 노드에 숫자 1, 2, 3 중 하나씩을 계속해서 떨어트려 트리의 리프 노드1에 숫자를 쌓는 게임을 하려고 합니다.
+#   1번 노드(루트 노드)에 숫자 1, 2, 3 중 하나를 떨어트립니다.
+#   숫자는 길인 간선을 따라 리프 노드까지 떨어집니다.
+#   숫자가 리프 노드에 도착하면, 숫자가 지나간 각 노드는 현재 길로 연결된 자식 노드 다음으로
+#   번호가 큰 자식 노드를 가리키는 간선을 새로운 길로 설정하고 기존의 길은 끊습니다.
+#       만약 현재 길로 연결된 노드의 번호가 가장 크면, 번호가 가장 작은 노드를 가리키는 간선을 길로 설정합니다.
+#       노드의 간선이 하나라면 계속 하나의 간선을 길로 설정합니다.
+#   원하는 만큼 계속해서 루트 노드에 숫자를 떨어트릴 수 있습니다.
+#       단, 앞서 떨어트린 숫자가 리프 노드까지 떨어진 후에 새로운 숫자를 떨어트려야 합니다.
+# [게임의 목표]는 각각의 리프 노드에 쌓인 숫자의 합을 target에서 가리키는 값과 같게 만드는 것입니다.
+# 트리의 각 노드들의 연결 관계를 담은 2차원 정수 배열 edges, 각 노드별로 만들어야 하는 숫자의 합을 담은 1차원 정수 배열 target이 매개변수로 주어집니다.
+# 이때, target 대로 리프 노드에 쌓인 숫자의 합을 맞추기 위해 숫자를 떨어트리는 모든 경우 중 가장 적은 숫자를 사용하며
+# 그중 사전 순으로 가장 빠른 경우를 1차원 정수 배열에 담아 return 하도록 solution 함수를 완성해주세요.
+# 만약, target대로 숫자의 합을 만들 수 없는 경우 [-1]을 return 해주세요.
+import math
+from collections import deque
+def solution(edges, target):
+    # math.lcm 은 파이썬 3.9부터 이용 가능
+    def lcm(array):
+        if len(array) == 1:
+            return array[0]
+        mid = len(array) // 2
+        l = lcm(array[:mid])
+        r = lcm(array[mid:])
+        return l * r // math.gcd(l, r)
+
+	# 루트 노드에서 "길"을 바꿔가며 도착한 노드를 반환
+    def search(graph):
+        start = 1
+        while graph[start]:
+            nxt = graph[start].pop(0)
+            graph[start].append(nxt)
+            start = nxt
+        return start
+
+	# 입력받은 간선으로부터 트리 만들기
+    N = len(target)
+    graph = {i: [] for i in range(N + 1)}
+    for s, e in edges:
+        graph[s].append(e)
+    for i in range(N + 1):
+        graph[i].sort()
+
+	# 자식을 따라 가며 형제 수의 누적곱이 주기
+    period = [1] * (N + 1)
+    q = deque([[1, 1]])
+    while q:
+        parent, product = q.popleft()
+        period[parent] = product
+        if graph[parent]:
+            product *= len(graph[parent])
+            for child in graph[parent]:
+                q.append([child, product])
+    # 각 주기의 최소공배수가 전체 주기
+    period[0] = lcm(period)
+
+	# 리프 노드 방문 순서를 저장하기 위해 주기만큼 순회
+    order = []
+    for i in range(period[0]):
+        order.append(search(graph))
+
+	# 삽입 횟수를 저장하는 리스트
+    check = [0] * (N + 1)
+    index = 0
+    while not all([check[i] <= target[i - 1] <= check[i] * 3 for i in range(1, N + 1)]):
+        check[order[index]] += 1
+        index = (index + 1) % period[0]
+        # 만들 수 없는 경우 즉시 탈출
+        if sum(check) > sum(target):
+            return [-1]
+
+	# 삽입할 수를 저장하는 딕셔너리
+    answer = {}
+    for i in range(1, N + 1):
+        if target[i - 1] == 0:
+            continue
+        # 개수가 최소가 되는 사전순으로 가장 먼저 오는 케이스 = 그리디
+        three = (target[i - 1] - check[i]) // 2
+        two = (target[i - 1] - check[i]) % 2
+        one = check[i] - two - three
+        answer[i] = [1] * one + [2] * two + [3] * three
+
+	# 리프 노드 방문 순서대로 결과 배열에 옮겨서 저장
+    procedure = []
+    for i in range(sum(check)):
+        procedure.append(answer[order[i % period[0]]].pop(0))
+
+    return procedure
