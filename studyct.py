@@ -4289,3 +4289,44 @@ def solution(edges, target):
         procedure.append(answer[order[i % period[0]]].pop(0))
 
     return procedure
+
+# n+1 카드게임
+# 당신은 1~n 사이의 수가 적힌 카드가 하나씩 있는 카드 뭉치와 동전 coin개를 이용한 게임을 하려고 합니다.
+# 카드 뭉치에서 카드를 뽑는 순서가 정해져 있으며, 게임은 다음과 같이 진행합니다.
+#   처음에 카드 뭉치에서 카드 n/3장을 뽑아 모두 가집니다. (n은 6의 배수입니다.)
+#       당신은 카드와 교환 가능한 동전 coin개를 가지고 있습니다.
+#   게임은 1라운드부터 시작되며, 각 라운드가 시작할 때 카드를 두 장 뽑습니다.
+#       카드 뭉치에 남은 카드가 없다면 게임을 종료합니다. 뽑은 카드는 카드 한 장당 동전 하나를 소모해 가지거나, 동전을 소모하지 않고 버릴 수 있습니다.
+#   카드에 적힌 수의 합이 n+1이 되도록 카드 두 장을 내고 다음 라운드로 진행할 수 있습니다.
+#       만약 카드 두 장을 낼 수 없다면 게임을 종료합니다.
+# 처음에 가진 동전수를 나타내는 정수 coin과 카드를 뽑는 순서대로 카드에 적힌 수를 담은 1차원 정수 배열 cards가 매개변수로 주어질 때,
+# 게임에서 도달 가능한 최대 라운드의 수를 return 하도록 solution 함수를 완성해 주세요.
+from collections import deque
+def check(deck1, deck2, target):
+    operand = set(deck2)
+    for card in deck1:
+        if target - card in operand:
+            deck1.remove(card)
+            deck2.remove(target-card)
+            return True
+    return False
+
+def solution(coin, cards):
+    hand = cards[:len(cards) // 3]
+    deck = deque(cards[len(cards) // 3:])
+    pending = []
+    turn = 1
+    while coin >= 0 and deck:
+        pending.append(deck.popleft())
+        pending.append(deck.popleft())
+        
+        if check(hand, hand, len(cards) + 1):
+            pass
+        elif coin >= 1 and check(hand, pending, len(cards) + 1):
+            coin -= 1
+        elif coin >= 2 and check(pending, pending, len(cards) + 1):
+            coin -= 2
+        else:
+            break
+        turn += 1
+    return turn
